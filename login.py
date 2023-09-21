@@ -4,13 +4,12 @@ import os
 import re
 import configparser
 
-from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free
+from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
+    github_url
 import requests
 
 url1 = 'http://172.16.2.100'
 url2 = 'https://www.baidu.com/'
-
-github_url = 'https://github.com/Apauto-to-all/AutoAuthorize'
 
 
 def link_github():

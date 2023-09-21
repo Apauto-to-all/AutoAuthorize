@@ -3,14 +3,13 @@ import json
 import os
 
 import requests
-from path import path_announcement, path_stats
+from path import path_announcement, path_stats, announcement_url
 from login import get_today
 
 
 def update_announcement():
-    announcement_url = 'https://ghproxy.com/https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/announcement.txt'
     try:
-        request = requests.get(announcement_url, timeout=5)  # 此时在内存为response响应对象开辟空间，从服务器返回的数据也是一直存储在内存中中
+        request = requests.get(announcement_url)
         with open(path_announcement, "wb") as f:
             f.write(request.content)
     except requests.exceptions.ConnectionError:

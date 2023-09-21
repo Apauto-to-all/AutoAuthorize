@@ -1,6 +1,8 @@
 import sys
 import winshell
 
+version = 'v2.0.0'
+
 path_base = winshell.application_data() + r'\Auto_Login_ECJTU_WiFi'
 
 path_private = path_base + r'/data/private'
@@ -19,7 +21,13 @@ path_announcement = path_base + r'/data/announcement.txt'
 
 path_stats = path_base + r'/data/stats.json'
 
-path_version = path_base + r'/version.txt'
+github_url = 'https://github.com/Apauto-to-all/AutoAuthorize'
+
+announcement_url = 'https://raw.fgit.cf/Apauto-to-all/AutoAuthorize/main/announcement.txt'
+
+announcement_url_o = 'https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/announcement.txt'
+
+version_url = 'https://raw.fgit.cf/Apauto-to-all/AutoAuthorize/main/version.txt'
 
 path_program = sys.executable
 

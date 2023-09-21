@@ -8,7 +8,7 @@ from PySide2.QtGui import QRegExpValidator
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
 
 from settings_functions import desktop, create_regedit, del_regedit, del_desktop
-from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds
+from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
     link_github
 from path import path_announcement, path_account, path_settings, path_stats, path_base
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         dialog = QDialog(self)
         dialog.setWindowTitle("更新……")
         # 在对话框中添加按钮和标签
-        label = QLabel('公告更新中……\n由于国内访问github缓慢，更新时间较长，请耐心等候', dialog)
+        label = QLabel('公告更新中……\n更新时间较长，请耐心等候', dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         layout = QVBoxLayout()
@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
             with open(path_announcement, 'r', encoding="utf-8") as f:
                 announcement = f.read()
             self.ui.textBrowser_gg.setPlainText(announcement)
+            self.ui.up_announcement_day.setText(get_today())
             dialog.close()
 
         QTimer.singleShot(100, up)

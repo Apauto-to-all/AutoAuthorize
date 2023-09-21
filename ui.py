@@ -13,12 +13,13 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 import qt_data_rc
+import qt_data_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(624, 457)
+        MainWindow.resize(624, 483)
         MainWindow.setContextMenuPolicy(Qt.NoContextMenu)
         icon = QIcon()
         icon.addFile(u":/image/image/k1.ico", QSize(), QIcon.Normal, QIcon.Off)
@@ -301,7 +302,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 580, 262))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 580, 288))
         self.gridLayout_7 = QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -446,6 +447,9 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.textBrowser_gg, self.save_settings)
 
         self.retranslateUi(MainWindow)
+
+        self.tabWidget.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi

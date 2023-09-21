@@ -8,27 +8,20 @@ from login import get_today
 
 
 def update_announcement():
-    announcement_url = 'https://ghproxy.com/https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/announcement.json'
-    request = requests.get(announcement_url)  # 此时在内存为response响应对象开辟空间，从服务器返回的数据也是一直存储在内存中中
-    if request.status_code == 200:
+    announcement_url = 'https://ghproxy.com/https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/announcement.txt'
+    try:
+        request = requests.get(announcement_url, timeout=5)  # 此时在内存为response响应对象开辟空间，从服务器返回的数据也是一直存储在内存中中
         with open(path_announcement, "wb") as f:
-            f.write(request.content)  # 调用write方法时将内存中的二进制数据写入硬盘
-        with open(path_stats) as f:
-            up_announcement_day = json.load(f)
-        up_announcement_day['announcement_day'] = get_today()
-        with open(path_stats, 'w') as f:
-            json.dump(up_announcement_day, f)
-    else:
+            f.write(request.content)
+    except requests.exceptions.ConnectionError:
         if not os.path.exists(path_announcement):
-            with open(path_announcement, 'w') as f:
-                json.dump({get_today(): "更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"},
-                          f)
+            with open(path_announcement, 'w', encoding="utf-8") as f:
+                text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"
+                f.write(text)
         else:
-            with open(path_announcement) as f:
-                ac = json.load(f)
-            ac[get_today()] = "更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"
-            with open(path_announcement, 'w') as f:
-                json.dump(ac, f)
+            with open(path_announcement, 'a', encoding="utf-8") as f:
+                text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"
+                f.write(text)
 
 
 def update_now_stats_days():

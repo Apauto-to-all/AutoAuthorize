@@ -60,9 +60,8 @@ class MainWindow(QMainWindow):
                     stats_data = json.load(f)
                 self.ui.up_announcement_day.setText(stats_data['announcement_day'])
             with open(path_announcement, 'r', encoding="utf-8") as f:
-                announcement = json.load(f)
-            json_str = json.dumps(announcement, ensure_ascii=False, indent=4)[1:-1]  # 将 JSON 对象转换为格式化的字符串
-            self.ui.textBrowser_gg.setPlainText(json_str)
+                announcement = f.read()
+            self.ui.textBrowser_gg.setPlainText(announcement)
             dialog.close()
 
         QTimer.singleShot(100, up)
@@ -149,9 +148,8 @@ class MainWindow(QMainWindow):
             self.ui.up_announcement_day.setText(stats_data['announcement_day'])
         if os.path.exists(path_announcement):
             with open(path_announcement, 'r', encoding="utf-8") as f:
-                announcement = json.load(f)
-            json_str = json.dumps(announcement, ensure_ascii=False, indent=4)[1:-1]  # 将 JSON 对象转换为格式化的字符串
-            self.ui.textBrowser_gg.setPlainText(json_str)
+                announcement = f.read()
+            self.ui.textBrowser_gg.setPlainText(announcement)
 
     def show_before_qty(self):
         if os.path.exists(path_stats):
@@ -486,7 +484,7 @@ def da_gty():
     if os.path.exists(path_stats):
         with open(path_stats) as f:
             s = json.load(f)
-        if s['da_qty'] == 1 and update_show_ds() == 1:
+        if s['da_qty'] == 0 and update_show_ds() == 1:
             ppa = QApplication(sys.argv)
             do = MainWindow()
             do.link_wifi_ui()

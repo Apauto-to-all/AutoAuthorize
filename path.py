@@ -15,7 +15,7 @@ path_account = path_base + r'/data/private/account.json'
 
 path_settings = path_base + r'/data/settings.ini'
 
-path_announcement = path_base + r'/data/announcement.json'
+path_announcement = path_base + r'/data/announcement.txt'
 
 path_stats = path_base + r'/data/stats.json'
 

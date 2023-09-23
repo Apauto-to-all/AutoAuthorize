@@ -12,7 +12,7 @@ from update import update_now_stats_days, update_announcement, update_announceme
     update_app_version
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
     link_github
-from path import path_announcement, path_account, path_settings, path_stats, path_base, version
+from path import path_announcement, path_account, path_settings, path_stats, path_base, version, lzy_url, lzy_password
 from ui import Ui_MainWindow
 
 
@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.tx = ""
         # 初始显示
         self.show_before_qty()
         self.show_start()
@@ -241,7 +242,7 @@ class MainWindow(QMainWindow):
                     self.tx = "出现未知问题"
             dialog1.close()
 
-        QTimer.singleShot(100, lin)
+        QTimer.singleShot(50, lin)
         dialog1.exec_()
 
         # 创建一个对话框窗口
@@ -517,6 +518,7 @@ class MainWindow(QMainWindow):
         def ch():
             self.v = update_app_version()
             dialog1.close()
+
         QTimer.singleShot(100, ch)
         dialog1.exec_()
 
@@ -535,22 +537,31 @@ class MainWindow(QMainWindow):
             v_t = self.v
         label = QLabel(v_t, dialog)
         label.setAlignment(Qt.AlignCenter)
-        button1 = QPushButton("打开开源地址", dialog)
-        button2 = QPushButton("关闭窗口", dialog)
+        button1 = QPushButton("打开github开源项目地址", dialog)
+        button2 = QPushButton(f"打开蓝奏云网盘以获取最新安装包，提取码：{lzy_password}（点击复制）", dialog)
+        button3 = QPushButton("关闭窗口", dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         layout = QVBoxLayout()
         layout.addWidget(label)
         layout.addWidget(button1)
         layout.addWidget(button2)
+        layout.addWidget(button3)
         dialog.setLayout(layout)
 
         def open_url():
             link_github()
             dialog.close()
 
+        def open_lzy():
+            command = 'echo ' + lzy_password.strip() + '|clip'
+            os.system(command)
+            os.system(f'start {lzy_url}')
+            dialog.close()
+
         button1.clicked.connect(open_url)
-        button2.clicked.connect(dialog.close)
+        button2.clicked.connect(open_lzy)
+        button3.clicked.connect(dialog.close)
         # 显示对话框
         dialog.exec_()
 

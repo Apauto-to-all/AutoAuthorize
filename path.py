@@ -31,4 +31,5 @@ version_url = 'https://raw.fgit.cf/Apauto-to-all/AutoAuthorize/main/version.txt'
 
 path_program = sys.executable
 
-
+lzy_url = 'https://wwaw.lanzouj.com/b052h91gb'
+lzy_password = 'ecjt'

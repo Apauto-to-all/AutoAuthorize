@@ -1,4 +1,5 @@
 import os
+import re
 import winreg
 import winshell
 from path import path_program
@@ -40,6 +41,18 @@ def del_desktop():
     lnk_path = desk_path + '\\' + ink_name + '.lnk'
     if os.path.isfile(lnk_path):
         os.remove(lnk_path)
+
+
+def check_version(version):
+    pattern = r'^v\d+\.\d+\.\d+$'
+    if not re.match(pattern, version):
+        return False
+    major, minor, patch = map(int, version[1:].split('.'))
+    if major < 0 or minor < 0 or patch < 0:
+        return False
+    if major == 0 and minor == 0 and patch == 0:
+        return False
+    return True
 
 
 key_name = "Auto_login_ECJTU_wifi"  # 注册表中自启动程序的键名

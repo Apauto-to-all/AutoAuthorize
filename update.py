@@ -3,7 +3,7 @@ import json
 import os
 
 import requests
-from path import path_announcement, path_stats, announcement_url
+from path import path_announcement, path_stats, announcement_url, version_url
 from login import get_today
 
 
@@ -57,7 +57,18 @@ def update_announcement_days():
 
 
 def update_app_version():
-    version_url = ''
+    try:
+        response = requests.get(version_url, timeout=7)
+        if response.status_code == 200:
+            v = response.text
+            return v
+        else:
+            return "检查失败，请注意检查网络连接，或点击“打开源地址”检查更新版本"
+    except requests.exceptions.ConnectTimeout:
+        return "超时，请注意检查网络连接，或点击“打开源地址”检查更新版本，或重新“检测最新版本”"
+    except Exception as p:
+        k = p
+        return "出现未知问题，请注意检查网络连接，或点击“打开源地址”检查更新版本"
 
 
 def update_show_ds():

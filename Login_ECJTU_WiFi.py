@@ -7,11 +7,12 @@ from PySide2.QtCore import QRegExp, Qt, QTimer
 from PySide2.QtGui import QRegExpValidator
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
 
-from settings_functions import desktop, create_regedit, del_regedit, del_desktop
-from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today
+from settings_functions import desktop, create_regedit, del_regedit, del_desktop, check_version
+from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today, \
+    update_app_version
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
     link_github
-from path import path_announcement, path_account, path_settings, path_stats, path_base
+from path import path_announcement, path_account, path_settings, path_stats, path_base, version
 from ui import Ui_MainWindow
 
 
@@ -40,6 +41,7 @@ class MainWindow(QMainWindow):
         self.ui.auto_box.toggled.connect(self.show_chose_wifi_auto)
         self.ui.button_del_all.clicked.connect(self.del_data)  # 初始化程序
         self.ui.link_github.clicked.connect(link_github)  # 打开github开源地址
+        self.ui.up_v.clicked.connect(self.up_version)  # 检测版本更新
 
     def update_announcement_now(self):
         # 创建一个对话框窗口
@@ -200,34 +202,53 @@ class MainWindow(QMainWindow):
             self.ui.dr_textBrowser.setText(tx)
 
     def link_wifi_dialog(self):
-        check_number_f = verify_wifi()
-        if check_number_f == 3:
-            link_wifi()
-            check_number = verify_wifi()
-            if check_number == 1:
-                tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
-            elif check_number == 2:
-                tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
-            elif check_number == 3:
-                tx = "登入失败，请检查学号、密码和运营商是否正确"
-            elif check_number == 4:
-                tx = "登入成功"
+        # 创建一个对话框窗口
+        dialog1 = QDialog(self)
+        dialog1.setWindowTitle("自动登入")
+        # 在对话框中添加按钮和标签
+        label = QLabel('自动检测网络登入校园网中……请稍等', dialog1)
+        # 隐藏问号
+        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        # 隐藏退出按钮
+        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowCloseButtonHint)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        dialog1.setLayout(layout)
+
+        def lin():
+            check_number_f = verify_wifi()
+            if check_number_f == 3:
+                link_wifi()
+                check_number = verify_wifi()
+                if check_number == 1:
+                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
+                elif check_number == 2:
+                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
+                elif check_number == 3:
+                    self.tx = "登入失败，请检查学号、密码和运营商是否正确"
+                elif check_number == 4:
+                    self.tx = "登入成功"
+                else:
+                    self.tx = "出现未知问题"
             else:
-                tx = "出现未知问题"
-        else:
-            if check_number_f == 1:
-                tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
-            elif check_number_f == 2:
-                tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
-            elif check_number_f == 4:
-                tx = "我们检测到您已成功登入校园网，请勿重复登入。"
-            else:
-                tx = "出现未知问题"
+                if check_number_f == 1:
+                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
+                elif check_number_f == 2:
+                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
+                elif check_number_f == 4:
+                    self.tx = "我们检测到您已成功登入校园网，请勿重复登入。"
+                else:
+                    self.tx = "出现未知问题"
+            dialog1.close()
+
+        QTimer.singleShot(100, lin)
+        dialog1.exec_()
+
         # 创建一个对话框窗口
         dialog = QDialog(self)
         dialog.setWindowTitle("自动登入")
         # 在对话框中添加按钮和标签
-        label = QLabel(tx, dialog)
+        label = QLabel(self.tx, dialog)
         button1 = QPushButton("打开主界面", dialog)
         button2 = QPushButton("关闭窗口", dialog)
         # 隐藏问号
@@ -478,6 +499,59 @@ class MainWindow(QMainWindow):
 
         button1.clicked.connect(sure)
         button2.clicked.connect(dialog.close)
+        dialog.exec_()
+
+    def up_version(self):
+        dialog1 = QDialog(self)
+        dialog1.setWindowTitle("更新……")
+        # 在对话框中添加按钮和标签
+        label = QLabel('检查最新版本中……时间较长，请稍等', dialog1)
+        # 隐藏问号
+        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        # 隐藏退出按钮
+        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowCloseButtonHint)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        dialog1.setLayout(layout)
+
+        def ch():
+            self.v = update_app_version()
+            dialog1.close()
+        QTimer.singleShot(100, ch)
+        dialog1.exec_()
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("更新……")
+        if check_version(self.v):
+            number1 = int(version.replace("v", "").replace(".", ""))
+            number2 = int(self.v.replace("v", "").replace(".", ""))
+            if number1 < number2:
+                v_t = version + '-->' + self.v + '\n 有最新版本，请点击“打开源地址”以更新程序'
+            elif number1 == number2:
+                v_t = version + '-->' + self.v + '\n 版本无变化，请关闭窗口'
+            else:
+                v_t = '???' + version + '-->' + self.v + '???\n出现问题，请点击“打开源地址”以手动检测最新版本'
+        else:
+            v_t = self.v
+        label = QLabel(v_t, dialog)
+        label.setAlignment(Qt.AlignCenter)
+        button1 = QPushButton("打开开源地址", dialog)
+        button2 = QPushButton("关闭窗口", dialog)
+        # 隐藏问号
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        layout.addWidget(button1)
+        layout.addWidget(button2)
+        dialog.setLayout(layout)
+
+        def open_url():
+            link_github()
+            dialog.close()
+
+        button1.clicked.connect(open_url)
+        button2.clicked.connect(dialog.close)
+        # 显示对话框
         dialog.exec_()
 
 

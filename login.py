@@ -8,9 +8,6 @@ from path import path_header, path_settings, path_data, path_account, path_priva
     github_url
 import requests
 
-url1 = 'http://172.16.2.100'
-url2 = 'https://www.baidu.com/'
-
 
 def link_github():
     os.system(f'start {github_url}')
@@ -191,6 +188,8 @@ def verify_wifi():
     3: 连接了校园网，但未登入
     4: 连接了校园网，已登入
     """
+    url1 = 'http://172.16.2.100'
+    url2 = 'https://www.baidu.com/'
     try:
         requests.get(url2, timeout=0.5)
     except requests.exceptions.ConnectionError:

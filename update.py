@@ -9,18 +9,22 @@ from login import get_today
 
 def update_announcement():
     try:
-        request = requests.get(announcement_url)
+        request = requests.get(announcement_url, timeout=8)
         with open(path_announcement, "wb") as f:
             f.write(request.content)
     except requests.exceptions.ConnectionError:
-        if not os.path.exists(path_announcement):
-            with open(path_announcement, 'w', encoding="utf-8") as f:
-                text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"
-                f.write(text)
-        else:
-            with open(path_announcement, 'a', encoding="utf-8") as f:
-                text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请点击以下“立即更新公告”按钮重新更新公告"
-                f.write(text)
+        update_announcement_fail()
+
+
+def update_announcement_fail():
+    if not os.path.exists(path_announcement):
+        with open(path_announcement, 'w', encoding="utf-8") as f:
+            text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            f.write(text)
+    else:
+        with open(path_announcement, 'a', encoding="utf-8") as f:
+            text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            f.write(text)
 
 
 def update_now_stats_days():
@@ -58,14 +62,14 @@ def update_announcement_days():
 
 def update_app_version():
     try:
-        response = requests.get(version_url, timeout=7)
+        response = requests.get(version_url, timeout=8)
         if response.status_code == 200:
             v = response.text
             return v
         else:
             return "检查失败，请注意检查网络连接，或点击“打开源地址”检查更新版本"
     except requests.exceptions.ConnectTimeout:
-        return "超时，请注意检查网络连接，或点击“打开源地址”检查更新版本，或重新“检测最新版本”"
+        return "超时，请注意检查网络连接，或重新检测，或点击“打开源地址”检查更新版本"
     except Exception as p:
         k = p
         return "出现未知问题，请注意检查网络连接，或点击“打开源地址”检查更新版本"

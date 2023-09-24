@@ -521,7 +521,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"\u516c\u544a", None))
 #endif // QT_CONFIG(tooltip)
         self.image_ds.setText("")
-        self.da_tet.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u6e90\u6709\u4f60\u66f4\u7cbe\u5f69", None))
+        self.da_tet.setText(QCoreApplication.translate("MainWindow", u"\u6f8e\u6e43\u7684\u52a8\u529b\uff0c\u6e90\u4e8e\u70b9\u70b9\u6ef4\u6ef4\u7684\u9f13\u52b1", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), "")
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("MainWindow", u"\u6253\u8d4f", None))

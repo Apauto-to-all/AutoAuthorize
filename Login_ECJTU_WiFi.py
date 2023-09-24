@@ -214,8 +214,6 @@ class MainWindow(QMainWindow):
         label.setAlignment(Qt.AlignCenter)
         # 隐藏问号
         dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        # 隐藏退出按钮
-        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowCloseButtonHint)
         layout = QVBoxLayout()
         layout.addWidget(label)
         dialog1.setLayout(layout)

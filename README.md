@@ -5,7 +5,7 @@
 
 ## 下载与安装
 
-- 安装包已经上传至[蓝奏云网盘](https://wwaw.lanzouj.com/b052h91gb)，提取吗：ecjt
+- 安装包已经上传至[蓝奏云网盘](https://wwaw.lanzouj.com/b052h91gb)，提取码：ecjt
 
 
 ## 安全声明

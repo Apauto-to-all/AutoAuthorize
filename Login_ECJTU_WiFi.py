@@ -7,7 +7,7 @@ from PySide2.QtCore import QRegExp, Qt, QTimer
 from PySide2.QtGui import QRegExpValidator
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
 
-from settings_functions import desktop, create_regedit, del_regedit, del_desktop, check_version
+from settings_functions import desktop, del_desktop, check_version, startup, del_startup, create_regedit, del_regedit
 from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today, \
     update_app_version
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
@@ -494,6 +494,7 @@ class MainWindow(QMainWindow):
                 # 最后删除根文件夹
                 os.rmdir(path_base)
                 del_desktop()
+                del_startup()
                 del_regedit()
                 dialog.close()
                 sys.exit()
@@ -592,5 +593,6 @@ if __name__ == "__main__":
         if setting['login']['verify_account'] == '1':
             widget.link_wifi_dialog()
     widget.show()
-    update_announcement_days()
+    if update_announcement_days() == 1:
+        widget.update_announcement_now()
     sys.exit(app.exec_())

@@ -5,6 +5,25 @@ import winshell
 from path import path_program
 
 
+def startup():
+    # 获取自启动文件夹的路径
+    startup_path = winshell.startup()
+    # 连接文件名与自启动文件夹的路径
+    lnk_path = startup_path + '\\' + ink_name + '.lnk'
+    # 创建快捷方式，第一个Path为连接后的目标路劲，第二个Target为触发文件路径
+    winshell.CreateShortcut(Path=lnk_path, Target=path_program)
+
+
+def del_startup():
+    # 获取自启动文件夹的路径
+    startup_path = winshell.startup()
+    # 连接文件名与自启动文件夹的路径
+    lnk_path = startup_path + '\\' + ink_name + '.lnk'
+    # 如果快捷方式存在，则删除之
+    if os.path.isfile(lnk_path):
+        os.remove(lnk_path)
+
+
 def create_regedit():
     # 注册表项的路径及名称
     key_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"

@@ -54,10 +54,12 @@ def update_announcement_days():
     days = s['stats_days']
     times = s['times_update']
     if times * 7 < days:
-        update_announcement()
         s['times_update'] += int(days / 7 - times + 1)
         with open(path_stats, 'w') as f:
             json.dump(s, f)
+        return 1
+    else:
+        return 0
 
 
 def update_app_version():

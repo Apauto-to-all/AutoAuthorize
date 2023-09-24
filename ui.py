@@ -304,12 +304,6 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 580, 288))
         self.gridLayout_7 = QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.button_del_all = QPushButton(self.scrollAreaWidgetContents_2)
-        self.button_del_all.setObjectName(u"button_del_all")
-        self.button_del_all.setStyleSheet(u"color: red;")
-
-        self.gridLayout_7.addWidget(self.button_del_all, 6, 0, 1, 1)
-
         self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 1, 1, 1)
@@ -317,7 +311,7 @@ class Ui_MainWindow(object):
         self.link_github = QCommandLinkButton(self.scrollAreaWidgetContents_2)
         self.link_github.setObjectName(u"link_github")
 
-        self.gridLayout_7.addWidget(self.link_github, 2, 3, 1, 1)
+        self.gridLayout_7.addWidget(self.link_github, 3, 3, 1, 1)
 
         self.auto_start = QCheckBox(self.scrollAreaWidgetContents_2)
         self.auto_start.setObjectName(u"auto_start")
@@ -329,18 +323,29 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.desktop_button, 0, 3, 1, 1)
 
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.button_del_all = QPushButton(self.scrollAreaWidgetContents_2)
+        self.button_del_all.setObjectName(u"button_del_all")
+        self.button_del_all.setStyleSheet(u"color: red;")
 
-        self.gridLayout_7.addItem(self.horizontalSpacer_10, 6, 1, 1, 3)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_7.addItem(self.verticalSpacer_2, 5, 0, 1, 4)
+        self.gridLayout_7.addWidget(self.button_del_all, 7, 0, 1, 1)
 
         self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
         self.up_v.setObjectName(u"up_v")
 
         self.gridLayout_7.addWidget(self.up_v, 1, 3, 1, 1)
+
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_10, 7, 1, 1, 3)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer_2, 6, 0, 1, 4)
+
+        self.link_dr = QCommandLinkButton(self.scrollAreaWidgetContents_2)
+        self.link_dr.setObjectName(u"link_dr")
+
+        self.gridLayout_7.addWidget(self.link_dr, 2, 3, 1, 1)
 
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
 
@@ -502,11 +507,12 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u8d26\u6237", None))
 #endif // QT_CONFIG(tooltip)
         self.save_settings.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bbe\u7f6e", None))
-        self.button_del_all.setText(QCoreApplication.translate("MainWindow", u"\u521d\u59cb\u5316\u7a0b\u5e8f", None))
         self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
         self.auto_start.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u673a\u81ea\u542f\uff08\u63a8\u8350\u6253\u5f00\uff09", None))
         self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
+        self.button_del_all.setText(QCoreApplication.translate("MainWindow", u"\u521d\u59cb\u5316\u7a0b\u5e8f", None))
         self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6700\u65b0\u7248\u672c", None))
+        self.link_dr.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u767b\u5165\u9875\u9762", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u8bbe\u7f6e", None))

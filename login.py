@@ -5,12 +5,16 @@ import re
 import configparser
 
 from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
-    github_url
+    github_url, dr_url
 import requests
 
 
 def link_github():
     os.system(f'start {github_url}')
+
+
+def link_dr():
+    os.system(f'start {dr_url}')
 
 
 def get_nc():

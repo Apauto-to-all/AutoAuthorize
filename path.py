@@ -23,6 +23,8 @@ path_stats = path_base + r'/data/stats.json'
 
 github_url = 'https://github.com/Apauto-to-all/AutoAuthorize'
 
+dr_url = "http://172.16.2.100/"
+
 announcement_url = 'https://raw.fgit.cf/Apauto-to-all/AutoAuthorize/main/announcement.txt'
 
 announcement_url_o = 'https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/announcement.txt'

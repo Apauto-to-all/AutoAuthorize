@@ -11,7 +11,7 @@ from settings_functions import desktop, del_desktop, check_version, startup, del
 from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today, \
     update_app_version
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
-    link_github
+    link_github, link_dr
 from path import path_announcement, path_account, path_settings, path_stats, path_base, version, lzy_url, lzy_password
 from ui import Ui_MainWindow
 
@@ -37,12 +37,13 @@ class MainWindow(QMainWindow):
         self.ui.save_settings.clicked.connect(self.save_settings)  # 保存设置
         self.ui.desktop_button.clicked.connect(desktop)  # 创建快捷方式
         self.ui.upadte_announcement_now.clicked.connect(self.update_announcement_now)  # 立即更新公告
-        self.ui.stu_box.toggled.connect(self.show_chose_wifi_stu)
-        self.ui.free_box.toggled.connect(self.show_chose_wifi_free)
-        self.ui.auto_box.toggled.connect(self.show_chose_wifi_auto)
+        self.ui.stu_box.toggled.connect(self.show_chose_wifi_stu)  # 连接网络选择设置
+        self.ui.free_box.toggled.connect(self.show_chose_wifi_free)  # 连接网络选择设置
+        self.ui.auto_box.toggled.connect(self.show_chose_wifi_auto)  # 连接网络选择设置
         self.ui.button_del_all.clicked.connect(self.del_data)  # 初始化程序
         self.ui.link_github.clicked.connect(link_github)  # 打开github开源地址
         self.ui.up_v.clicked.connect(self.up_version)  # 检测版本更新
+        self.ui.link_dr.clicked.connect(link_dr)  # 打开校园网登入页面
 
     def update_announcement_now(self):
         # 创建一个对话框窗口
@@ -50,6 +51,7 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("更新……")
         # 在对话框中添加按钮和标签
         label = QLabel('公告更新中……\n更新时间较长，请耐心等候', dialog)
+        label.setAlignment(Qt.AlignCenter)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         layout = QVBoxLayout()
@@ -75,6 +77,7 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("确认窗口")
         # 在对话框中添加按钮和标签
         label = QLabel("公告更新完成")
+        label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("确定", dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -208,6 +211,7 @@ class MainWindow(QMainWindow):
         dialog1.setWindowTitle("自动登入")
         # 在对话框中添加按钮和标签
         label = QLabel('自动检测网络登入校园网中……请稍等', dialog1)
+        label.setAlignment(Qt.AlignCenter)
         # 隐藏问号
         dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         # 隐藏退出按钮
@@ -242,7 +246,7 @@ class MainWindow(QMainWindow):
                     self.tx = "出现未知问题"
             dialog1.close()
 
-        QTimer.singleShot(50, lin)
+        QTimer.singleShot(100, lin)
         dialog1.exec_()
 
         # 创建一个对话框窗口
@@ -250,8 +254,10 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("自动登入")
         # 在对话框中添加按钮和标签
         label = QLabel(self.tx, dialog)
+        label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("打开主界面", dialog)
         button2 = QPushButton("关闭窗口", dialog)
+        button3 = QPushButton("打开校园网登入页面", dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         # 隐藏退出按钮
@@ -260,9 +266,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(label)
         layout.addWidget(button1)
         layout.addWidget(button2)
+        layout.addWidget(button3)
         dialog.setLayout(layout)
         button1.clicked.connect(dialog.close)
         button2.clicked.connect(sys.exit)
+
+        def url():
+            link_dr()
+            sys.exit()
+
+        button3.clicked.connect(url)
         # 显示对话框
         dialog.exec_()
 
@@ -322,6 +335,7 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("确认窗口")
         # 在对话框中添加按钮和标签
         label = QLabel("设置已经保存")
+        label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("确定", dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -365,6 +379,7 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("验证")
         # 在对话框中添加按钮和标签
         label = QLabel("验证账户需要在未登入情况下连接校园网")
+        label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("已在未登入情况下连接校园网，开始验证", dialog)
         button2 = QPushButton("取消验证", dialog)
         button3 = QPushButton("确保账户信息无误，跳过验证", dialog)
@@ -469,6 +484,7 @@ class MainWindow(QMainWindow):
         # 在对话框中添加按钮和标签
         label = QLabel(
             '该操作会删除储存在你电脑中的全部数据，并关闭设置中的所有功能，请考虑再三')
+        label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton('我确认删除', dialog)
         button2 = QPushButton('取消', dialog)
         # 隐藏问号
@@ -508,6 +524,7 @@ class MainWindow(QMainWindow):
         dialog1.setWindowTitle("更新……")
         # 在对话框中添加按钮和标签
         label = QLabel('检查最新版本中……时间较长，请稍等', dialog1)
+        label.setAlignment(Qt.AlignCenter)
         # 隐藏问号
         dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         # 隐藏退出按钮

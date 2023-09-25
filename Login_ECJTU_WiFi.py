@@ -379,7 +379,7 @@ class MainWindow(QMainWindow):
         # 在对话框中添加按钮和标签
         label = QLabel("验证账户需要在未登入情况下连接校园网")
         label.setAlignment(Qt.AlignCenter)
-        button1 = QPushButton("已在未登入情况下连接校园网，开始验证", dialog)
+        button1 = QPushButton("开始验证（如果未登出校园网，则会自动打开校园网登入网页）", dialog)
         button2 = QPushButton("取消验证", dialog)
         button3 = QPushButton("确保账户信息无误，跳过验证", dialog)
 
@@ -416,7 +416,8 @@ class MainWindow(QMainWindow):
                 self.ui.dr_textBrowser.setText(tx)
                 dialog.close()
             elif check_number == 4:
-                tx = "检测到你已连接校园网，并处于登入状态，请退出登入，以完成账户验证"
+                tx = "检测到你已连接校园网，但处于登入状态，请退出登入，以完成账户验证"
+                link_dr()
             else:
                 tx = "出现未知问题"
             label.setText(tx)

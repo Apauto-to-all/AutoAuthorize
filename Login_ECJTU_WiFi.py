@@ -3,6 +3,7 @@ import json
 import os
 import sys
 
+from PySide2 import QtCore
 from PySide2.QtCore import QRegExp, Qt, QTimer
 from PySide2.QtGui import QRegExpValidator
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
@@ -599,6 +600,7 @@ def da_gty():
 if __name__ == "__main__":
     create_files()
     da_gty()
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
     widget = MainWindow()
     if os.path.exists(path_settings):

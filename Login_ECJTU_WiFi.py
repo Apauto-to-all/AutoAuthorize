@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
             with open(path_stats) as f:
                 s = json.load(f)
             if s['da_qty'] == 0:
-                self.ui.tabWidget.setTabToolTip(5, "敬请期待")
+                self.ui.tabWidget.setTabToolTip(4, "敬请期待")
                 self.ui.image_ds.hide()
                 self.ui.da_tet.hide()
 

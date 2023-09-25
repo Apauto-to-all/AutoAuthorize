@@ -8,7 +8,7 @@ from PySide2.QtCore import QRegExp, Qt, QTimer
 from PySide2.QtGui import QRegExpValidator
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
 
-from settings_functions import desktop, del_desktop, check_version, startup, del_startup, create_regedit, del_regedit
+from settings_functions import desktop, del_desktop, check_version, del_startup, create_regedit, del_regedit
 from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today, \
     update_app_version
 from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \

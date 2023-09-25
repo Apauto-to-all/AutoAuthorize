@@ -14,6 +14,9 @@ def update_announcement():
             f.write(request.content)
     except requests.exceptions.ConnectionError:
         update_announcement_fail()
+    except Exception as p:
+        k = p
+        update_announcement_fail()
 
 
 def update_announcement_fail():

@@ -20,6 +20,7 @@ from ui import Ui_MainWindow
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.tak = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.tx = ""
@@ -439,36 +440,34 @@ class MainWindow(QMainWindow):
         # 创建一个对话框窗口
         dialog = QDialog(self)
         dialog.setWindowTitle("窗口")
+        self.tak = [
+            '我们检测到您已经使用了本程序一段时间，非常感谢您使用我们的程序！',
+            '我们目前的宣传渠道比较有限，如果您喜欢我们的应用，可以分享给您的朋友、同学。感谢您的支持！',
+            '如果您有什么意见或建议，可在程序右下角找到我的联系方式',
+            '如果你觉得本程序对你有用，也可以考虑给予支持。\n请按照自己的意愿和能力来决定是否打赏，无论如何，你仍可以继续免费使用本程序。\n注意：这条提醒仅出现一次，无论你的选择如何。',
+        ]
         # 在对话框中添加按钮和标签
-        label = QLabel("非常感谢您使用本程序！")
+        label = QLabel(self.tak[0])
         label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("下一步", dialog)
-        # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        # 隐藏退出按钮
-        # dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowCloseButtonHint)
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowCloseButtonHint)
         layout = QVBoxLayout()
         layout.addWidget(label)
         layout.addWidget(button1)
         dialog.setLayout(layout)
 
         def talk():
-            tak = [
-                '非常感谢您使用本程序！',
-                '我们目前的宣传渠道比较有限，如果您喜欢我们的应用，请分享给您的朋友、同学。感谢您的支持！',
-                '如果您有什么意见或建议，可在程序右下角找到我的联系方式',
-                '如果你觉得这个程序对你有用，也可以考虑给予支持。这条提醒仅出现一次，无论你的选择如何。\n请按照自己的能力来决定是否打赏，你仍可以继续免费使用。',
-            ]
-            if label.text() == tak[-1]:
+            if label.text() == self.tak[-1]:
                 dialog.close()
             else:
-                llk = len(tak)
+                llk = len(self.tak)
                 for i in range(llk):
-                    if label.text() == tak[i] and i != llk - 1:
-                        label.setText(tak[i + 1])
+                    if label.text() == self.tak[i] and i != llk - 1:
+                        label.setText(self.tak[i + 1])
                         QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
                         break
-                if label.text() == tak[-1]:
+                if label.text() == self.tak[-1]:
                     button1.setText('我会考虑')
                     layout.addWidget(button2)
 
@@ -600,8 +599,8 @@ def da_gty():
 
 if __name__ == "__main__":
     create_files()
-    da_gty()
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+    da_gty()
     app = QApplication(sys.argv)
     widget = MainWindow()
     if os.path.exists(path_settings):

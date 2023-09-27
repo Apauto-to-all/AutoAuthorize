@@ -3,6 +3,7 @@ import json
 import os
 import re
 import configparser
+import wmi
 
 from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
     github_url, dr_url

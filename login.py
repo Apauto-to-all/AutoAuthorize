@@ -129,7 +129,10 @@ def link_wifi():
     settings = configparser.ConfigParser()
     settings.read(path_settings)
     if settings['settings']['wifi_free'] == '1':
-        requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+        requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
+        if verify_wifi() == 3:
+            logout()
+            requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
     elif settings['settings']['wifi_stu'] == '1':
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
     else:

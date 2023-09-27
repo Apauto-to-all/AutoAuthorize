@@ -133,12 +133,44 @@ def link_wifi():
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
     else:
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
-        requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+        if verify_wifi() == 3:
+            logout()
+            requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+
     with open(path_stats) as f:
         stats_f = json.load(f)
     stats_f['stats_times'] += 1
     with open(path_stats, 'w') as f:
         json.dump(stats_f, f)
+
+
+def get_mac_address():
+    s = wmi.WMI()
+    mac_addresses = []
+    for nw in s.Win32_NetworkAdapterConfiguration(IPEnabled=1):
+        mac = str(nw.MACAddress).replace(':', '').lower()
+        mac_addresses.append(mac)
+    mac_addresses = mac_addresses[0]
+    return mac_addresses
+
+
+def logout():
+    mac = get_mac_address()
+    url_out = f'http://172.16.2.100:801/eportal/?c=ACSetting&a=Logout&wlanuserip=null&wlanacip=null&wlanacname=null' \
+              f'&port=&hostname=172.16.2.100&iTermType=1&session=null&queryACIP=0&mac={mac}'
+    post_data_out = {
+        'c': 'ACSetting',
+        'a': 'Logout',
+        'wlanuserip': 'null',
+        'wlanacname': 'null',
+        'port': '',
+        'hostname': '172.16.2.100',
+        'iTermType': '1',
+        'session': 'null',
+        'queryACIP': '0',
+        'mac': f'{mac}'
+    }
+    requests.post(url_out, data=post_data_out, headers=get_post_header())
 
 
 def create_files():

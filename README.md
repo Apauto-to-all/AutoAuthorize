@@ -1,6 +1,6 @@
 # 自动登入ECJTU校园网
 
-丝滑登入校园网，支持ECJTU_Stu和EcjtuLib_Free
+丝滑连接校园网，支持ECJTU_Stu和EcjtuLib_Free
 
 
 ## 下载与安装

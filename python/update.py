@@ -3,33 +3,40 @@ import json
 import os
 
 import requests
-from path import path_announcement, path_stats, announcement_url, version_url
+
 from login import get_today
+from path import path_announcement, path_stats, announcement_url, version_url
 
 
+# 更新公告
 def update_announcement():
     try:
         request = requests.get(announcement_url, timeout=8)
         with open(path_announcement, "wb") as f:
-            f.write(request.content)
-    except requests.exceptions.ConnectionError:
-        update_announcement_fail()
-    except Exception as p:
-        k = p
+            f.write(request.content)  # 将公告内容写入文件
+        # 更新公告时间
+        with open(path_stats) as f:
+            stats_f = json.load(f)
+        stats_f["announcement_day"] = get_today()
+        with open(path_stats, 'w') as f:
+            json.dump(stats_f, f)
+    except Exception:
         update_announcement_fail()
 
 
+# 更新公告失败
 def update_announcement_fail():
     if not os.path.exists(path_announcement):
         with open(path_announcement, 'w', encoding="utf-8") as f:
-            text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            text = '\n\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
             f.write(text)
     else:
         with open(path_announcement, 'a', encoding="utf-8") as f:
-            text = '\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            text = '\n\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
             f.write(text)
 
 
+# 更新统计天数
 def update_now_stats_days():
     today_obj = datetime.datetime.strptime(get_today(), '%Y-%m-%d %H:%M:%S')
     with open(path_stats) as f:
@@ -43,28 +50,7 @@ def update_now_stats_days():
         json.dump(stats_f, f)
 
 
-def update_stats_times():
-    with open(path_stats) as f:
-        stats_f = json.load(f)
-    stats_f['stats_times'] += 1
-    with open(path_stats) as f:
-        json.dump(stats_f, f)
-
-
-def update_announcement_days():
-    with open(path_stats) as f:
-        s = json.load(f)
-    days = s['stats_days']
-    times = s['times_update']
-    if times * 7 < days:
-        s['times_update'] += int(days / 7 - times + 1)
-        with open(path_stats, 'w') as f:
-            json.dump(s, f)
-        return 1
-    else:
-        return 0
-
-
+# 检查版本
 def update_app_version():
     try:
         response = requests.get(version_url, timeout=8)
@@ -78,17 +64,3 @@ def update_app_version():
     except Exception as p:
         k = p
         return "出现未知问题，请注意检查网络连接，或点击“打开源地址”检查更新版本"
-
-
-def update_show_ds():
-    with open(path_stats) as f:
-        s = json.load(f)
-    days = s['stats_days']
-    times = s['stats_times']
-    if days > 7 and times > 7:
-        s['da_qty'] = 1
-        with open(path_stats, 'w') as f:
-            json.dump(s, f)
-        return 1
-    else:
-        return 0

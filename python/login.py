@@ -1,20 +1,26 @@
+import configparser
 import datetime
 import json
 import os
 import re
-import configparser
-import wmi
 
-from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
-    github_url, dr_url
 import requests
 
+from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
+    github_url, dr_url, lzy_password, lzy_url
 
-def link_github():
+
+def open_lzy():  # 打开蓝奏云网盘
+    command = 'echo ' + lzy_password.strip() + '|clip'
+    os.system(command)
+    os.system(f'start {lzy_url}')
+
+
+def link_github():  # 打开github地址
     os.system(f'start {github_url}')
 
 
-def link_dr():
+def link_dr():  # 打开校园网验证地址
     os.system(f'start {dr_url}')
 
 
@@ -29,6 +35,7 @@ def get_post_url():
     html = requests.get(url).text
     ip4_y = re.search("v4ip='(.*?)';", html, re.S)
     ip4_n = re.search("v46ip='(.*?)' ", html, re.S)
+    v46ip = '10.32.0.223'
     if ip4_y is None:
         ip4 = ip4_n.group(1)
     else:
@@ -64,7 +71,7 @@ def get_operator_last(operator):
     elif operator == '中国联通':
         kk = '@unicom'
     else:
-        kk = None
+        kk = '没有选择运营商'
     return kk
 
 
@@ -125,16 +132,15 @@ def save_account(nc, username, password, operator):
     save_post_data_header(username, password, operator)
 
 
-def link_wifi():
+def link_wifi():  # 登入校园网
     settings = configparser.ConfigParser()
     settings.read(path_settings)
     if settings['settings']['wifi_free'] == '1':
-        requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
-        if verify_wifi() == 3:
-            logout()
-            requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+        requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+
     elif settings['settings']['wifi_stu'] == '1':
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
+
     else:
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
         if verify_wifi() == 3:
@@ -148,18 +154,8 @@ def link_wifi():
         json.dump(stats_f, f)
 
 
-def get_mac_address():
-    s = wmi.WMI()
-    mac_addresses = []
-    for nw in s.Win32_NetworkAdapterConfiguration(IPEnabled=1):
-        mac = str(nw.MACAddress).replace(':', '').lower()
-        mac_addresses.append(mac)
-    mac_addresses = mac_addresses[0]
-    return mac_addresses
-
-
-def logout():
-    mac = get_mac_address()
+def logout():  # 注销校园网账户
+    mac = re.findall("olmac='(.*?)'", requests.get('http://172.16.2.100/').text, re.S)[0]
     url_out = f'http://172.16.2.100:801/eportal/?c=ACSetting&a=Logout&wlanuserip=null&wlanacip=null&wlanacname=null' \
               f'&port=&hostname=172.16.2.100&iTermType=1&session=null&queryACIP=0&mac={mac}'
     post_data_out = {
@@ -177,7 +173,7 @@ def logout():
     requests.post(url_out, data=post_data_out, headers=get_post_header())
 
 
-def create_files():
+def create_files():  # 第一次运行，创建文件
     if not os.path.exists(path_private):
         os.makedirs(path_private)
     if not os.path.exists(path_settings):
@@ -188,7 +184,7 @@ def create_files():
         }
         config["settings"] = {
             "auto_start": "0",  # 自启动
-            "wifi_auto": "1",  # 选择WiFi
+            "wifi_auto": "1",  # 选择WiFi，默认选择“自动选择”
             "wifi_free": "0",
             "wifi_stu": "0",
         }
@@ -197,19 +193,17 @@ def create_files():
             config.write(config_file)
     if not os.path.exists(path_stats):
         dat = {
-            "begin_day": get_today(),
-            "now_day": get_today(),
-            "announcement_day": "not updated",
-            "stats_days": 0,
-            "stats_times": 0,
-            "times_update": 0,
-            "da_qty": 0
+            "begin_day": get_today(),  # 开始使用时间
+            "now_day": get_today(),  # 当前时间
+            "announcement_day": "not updated",  # 公告更新时间
+            "stats_days": 0,  # 统计使用天数
+            "stats_times": 0,  # 统计使用次数
         }
         with open(path_stats, 'w') as f:
             json.dump(dat, f)
 
 
-def change_settings(section, option, value):
+def change_settings(section, option, value):  # 快速修改设置的值
     settings = configparser.ConfigParser()
     settings.read(path_settings)
     settings.set(section, option, value)
@@ -217,11 +211,11 @@ def change_settings(section, option, value):
         settings.write(f_s)
 
 
-def get_today():
+def get_today():  # 获取当前时间
     return datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 
 
-def verify_wifi():
+def verify_wifi():  # 验证网络连接状态
     txt = """
     1: 网络未连接
     2: 已连接其他网络

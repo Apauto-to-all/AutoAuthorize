@@ -13,12 +13,13 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 import qt_data_rc
+import qt_data_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(624, 483)
+        MainWindow.resize(624, 501)
         MainWindow.setContextMenuPolicy(Qt.NoContextMenu)
         icon = QIcon()
         icon.addFile(u":/image/image/k1.ico", QSize(), QIcon.Normal, QIcon.Off)
@@ -207,7 +208,6 @@ class Ui_MainWindow(object):
         self.operator_box.addItem("")
         self.operator_box.addItem("")
         self.operator_box.addItem("")
-        self.operator_box.addItem("")
         self.operator_box.setObjectName(u"operator_box")
         self.operator_box.setContextMenuPolicy(Qt.NoContextMenu)
         self.operator_box.setEditable(False)
@@ -292,11 +292,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addItem(self.horizontalSpacer_3, 2, 0, 1, 1)
 
-        self.save_settings = QPushButton(self.tab_2)
-        self.save_settings.setObjectName(u"save_settings")
-
-        self.gridLayout_5.addWidget(self.save_settings, 2, 1, 1, 1)
-
         self.line_2 = QFrame(self.tab_2)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setFrameShape(QFrame.HLine)
@@ -304,14 +299,48 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.line_2, 1, 0, 1, 2)
 
+        self.save_settings = QPushButton(self.tab_2)
+        self.save_settings.setObjectName(u"save_settings")
+
+        self.gridLayout_5.addWidget(self.save_settings, 2, 1, 1, 1)
+
         self.scrollArea_2 = QScrollArea(self.tab_2)
         self.scrollArea_2.setObjectName(u"scrollArea_2")
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 580, 288))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 580, 306))
         self.gridLayout_7 = QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.button_del_all = QPushButton(self.scrollAreaWidgetContents_2)
+        self.button_del_all.setObjectName(u"button_del_all")
+        self.button_del_all.setStyleSheet(u"color: red;")
+
+        self.gridLayout_7.addWidget(self.button_del_all, 9, 0, 1, 1)
+
+        self.desktop_button = QPushButton(self.scrollAreaWidgetContents_2)
+        self.desktop_button.setObjectName(u"desktop_button")
+
+        self.gridLayout_7.addWidget(self.desktop_button, 1, 0, 1, 1)
+
+        self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
+        self.up_v.setObjectName(u"up_v")
+
+        self.gridLayout_7.addWidget(self.up_v, 0, 3, 1, 1)
+
+        self.auto_start = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.auto_start.setObjectName(u"auto_start")
+
+        self.gridLayout_7.addWidget(self.auto_start, 0, 0, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer_2, 8, 0, 1, 4)
+
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_10, 9, 1, 1, 3)
+
         self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 1, 1, 1)
@@ -319,41 +348,18 @@ class Ui_MainWindow(object):
         self.link_github = QCommandLinkButton(self.scrollAreaWidgetContents_2)
         self.link_github.setObjectName(u"link_github")
 
-        self.gridLayout_7.addWidget(self.link_github, 3, 3, 1, 1)
-
-        self.auto_start = QCheckBox(self.scrollAreaWidgetContents_2)
-        self.auto_start.setObjectName(u"auto_start")
-
-        self.gridLayout_7.addWidget(self.auto_start, 0, 0, 1, 1)
-
-        self.desktop_button = QPushButton(self.scrollAreaWidgetContents_2)
-        self.desktop_button.setObjectName(u"desktop_button")
-
-        self.gridLayout_7.addWidget(self.desktop_button, 0, 3, 1, 1)
-
-        self.button_del_all = QPushButton(self.scrollAreaWidgetContents_2)
-        self.button_del_all.setObjectName(u"button_del_all")
-        self.button_del_all.setStyleSheet(u"color: red;")
-
-        self.gridLayout_7.addWidget(self.button_del_all, 7, 0, 1, 1)
-
-        self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
-        self.up_v.setObjectName(u"up_v")
-
-        self.gridLayout_7.addWidget(self.up_v, 1, 3, 1, 1)
-
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_10, 7, 1, 1, 3)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_7.addItem(self.verticalSpacer_2, 6, 0, 1, 4)
+        self.gridLayout_7.addWidget(self.link_github, 5, 3, 1, 1)
 
         self.link_dr = QCommandLinkButton(self.scrollAreaWidgetContents_2)
         self.link_dr.setObjectName(u"link_dr")
 
-        self.gridLayout_7.addWidget(self.link_dr, 2, 3, 1, 1)
+        self.gridLayout_7.addWidget(self.link_dr, 4, 3, 1, 1)
+
+        self.lzy_pushButton = QPushButton(self.scrollAreaWidgetContents_2)
+        self.lzy_pushButton.setObjectName(u"lzy_pushButton")
+        self.lzy_pushButton.setToolTipDuration(0)
+
+        self.gridLayout_7.addWidget(self.lzy_pushButton, 3, 3, 1, 1)
 
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
 
@@ -369,7 +375,7 @@ class Ui_MainWindow(object):
         self.upadte_announcement_now = QPushButton(self.tab_3)
         self.upadte_announcement_now.setObjectName(u"upadte_announcement_now")
 
-        self.gridLayout_6.addWidget(self.upadte_announcement_now, 2, 6, 1, 1)
+        self.gridLayout_6.addWidget(self.upadte_announcement_now, 2, 2, 1, 1)
 
         self.label_10 = QLabel(self.tab_3)
         self.label_10.setObjectName(u"label_10")
@@ -381,21 +387,16 @@ class Ui_MainWindow(object):
         self.textBrowser_gg.setEnabled(True)
         self.textBrowser_gg.setContextMenuPolicy(Qt.NoContextMenu)
 
-        self.gridLayout_6.addWidget(self.textBrowser_gg, 1, 0, 1, 7)
-
-        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_6.addItem(self.horizontalSpacer_7, 2, 5, 1, 1)
-
-        self.label_8 = QLabel(self.tab_3)
-        self.label_8.setObjectName(u"label_8")
-
-        self.gridLayout_6.addWidget(self.label_8, 2, 0, 1, 5)
+        self.gridLayout_6.addWidget(self.textBrowser_gg, 1, 0, 1, 3)
 
         self.up_announcement_day = QLabel(self.tab_3)
         self.up_announcement_day.setObjectName(u"up_announcement_day")
 
         self.gridLayout_6.addWidget(self.up_announcement_day, 0, 1, 1, 1)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.gridLayout_6.addItem(self.horizontalSpacer_7, 0, 2, 1, 1)
 
         icon4 = QIcon()
         icon4.addFile(u":/image/image/message_square_icon.png", QSize(), QIcon.Active, QIcon.On)
@@ -503,7 +504,6 @@ class Ui_MainWindow(object):
         self.operator_box.setItemText(1, QCoreApplication.translate("MainWindow", u"\u4e2d\u56fd\u79fb\u52a8", None))
         self.operator_box.setItemText(2, QCoreApplication.translate("MainWindow", u"\u4e2d\u56fd\u8054\u901a", None))
         self.operator_box.setItemText(3, QCoreApplication.translate("MainWindow", u"\u4e2d\u56fd\u7535\u4fe1", None))
-        self.operator_box.setItemText(4, QCoreApplication.translate("MainWindow", u"\u4e0d\u4f7f\u7528ECJTU_Stu", None))
 
         self.username.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u8bf7\u8f93\u5165\u5b66\u53f7", None))
         self.stu_box.setText(QCoreApplication.translate("MainWindow", u"ECJTU-Stu", None))
@@ -516,12 +516,19 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u8d26\u6237", None))
 #endif // QT_CONFIG(tooltip)
         self.save_settings.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bbe\u7f6e", None))
-        self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
-        self.auto_start.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u673a\u81ea\u542f\uff08\u63a8\u8350\u6253\u5f00\uff09", None))
-        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
         self.button_del_all.setText(QCoreApplication.translate("MainWindow", u"\u521d\u59cb\u5316\u7a0b\u5e8f", None))
-        self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u6700\u65b0\u7248\u672c", None))
+        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
+        self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
+        self.auto_start.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u673a\u81ea\u542f\uff08\u63a8\u8350\u6253\u5f00\uff09", None))
+        self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
         self.link_dr.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u767b\u5165\u9875\u9762", None))
+#if QT_CONFIG(tooltip)
+        self.lzy_pushButton.setToolTip(QCoreApplication.translate("MainWindow", u"\u70b9\u51fb\u81ea\u52a8\u590d\u5236\u63d0\u53d6\u7801", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(whatsthis)
+        self.lzy_pushButton.setWhatsThis("")
+#endif // QT_CONFIG(whatsthis)
+        self.lzy_pushButton.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u84dd\u594f\u4e91\u7f51\u76d8\uff08\u63d0\u53d6\u7801\uff1aecjtu\uff09", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u8bbe\u7f6e", None))
@@ -529,7 +536,6 @@ class Ui_MainWindow(object):
         self.upadte_announcement_now.setText(QCoreApplication.translate("MainWindow", u"\u7acb\u5373\u66f4\u65b0\u516c\u544a", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"\u4e0a\u6b21\u66f4\u65b0\u65f6\u95f4:", None))
         self.textBrowser_gg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u5230\u516c\u544a\u672a\u52a0\u8f7d\uff0c\u8bf7\u5728\u8054\u7f51\u73af\u5883\u4e0b\uff0c\u624b\u52a8\u70b9\u51fb\u201c\u7acb\u523b\u66f4\u65b0\u516c\u544a\u201d\u6309\u94ae", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"\u516c\u544a\u4f1a\u81ea\u52a8\u66f4\u65b0\uff0c\u5927\u6982\u6bcf7\u5929\u66f4\u65b0\u4e00\u6b21\uff0c\u6ce8\u610f\u67e5\u770b\u6700\u65b0\u4fe1\u606f", None))
         self.up_announcement_day.setText(QCoreApplication.translate("MainWindow", u"\u672a\u66f4\u65b0", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), "")
 #if QT_CONFIG(tooltip)

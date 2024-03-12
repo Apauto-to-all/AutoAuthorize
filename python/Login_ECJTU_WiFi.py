@@ -3,18 +3,16 @@ import json
 import os
 import sys
 
-from PySide2 import QtCore
 from PySide2.QtCore import QRegExp, Qt, QTimer
-from PySide2.QtGui import QRegExpValidator
+from PySide2.QtGui import QRegExpValidator, QFont
 from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLabel, QVBoxLayout, QPushButton
 
-from settings_functions import desktop, del_desktop, check_version, del_startup, create_regedit, del_regedit
-from update import update_now_stats_days, update_announcement, update_announcement_days, update_show_ds, get_today, \
-    update_app_version
-from login import verify_wifi, save_post_data_header, save_account, create_files, change_settings, link_wifi, get_nc, \
-    link_github, link_dr
+from login import verify_wifi, save_post_data_header, save_account, change_settings, link_wifi, get_nc, \
+    link_github, link_dr, open_lzy
 from path import path_announcement, path_account, path_settings, path_stats, path_base, version, lzy_url, lzy_password
+from settings_functions import desktop, del_desktop, check_version, del_startup, create_regedit, del_regedit
 from ui import Ui_MainWindow
+from update import update_announcement, update_app_version
 
 
 class MainWindow(QMainWindow):
@@ -25,7 +23,6 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.tx = ""
         # 初始显示
-        self.show_before_qty()
         self.show_start()
         self.update_settings_ini()  # 更新设置文件
         # 功能
@@ -46,8 +43,10 @@ class MainWindow(QMainWindow):
         self.ui.link_github.clicked.connect(link_github)  # 打开github开源地址
         self.ui.up_v.clicked.connect(self.up_version)  # 检测版本更新
         self.ui.link_dr.clicked.connect(link_dr)  # 打开校园网登入页面
+        self.ui.lzy_pushButton.clicked.connect(open_lzy)  # 打开蓝奏云网盘
 
-    def update_announcement_now(self):
+    # 更新公告
+    def update_announcement_now(self):  # 立即更新公告
         # 创建一个对话框窗口
         dialog = QDialog(self)
         dialog.setWindowTitle("更新……")
@@ -69,7 +68,6 @@ class MainWindow(QMainWindow):
             with open(path_announcement, 'r', encoding="utf-8") as f:
                 announcement = f.read()
             self.ui.textBrowser_gg.setPlainText(announcement)
-            self.ui.up_announcement_day.setText(get_today())
             dialog.close()
 
         QTimer.singleShot(100, up)
@@ -90,6 +88,7 @@ class MainWindow(QMainWindow):
         button1.clicked.connect(dialog.close)
         dialog.exec_()
 
+    # 选择修改账户，数据初始化
     def restore_line_edit(self):
         self.change_and_update_settings('login', 'save_account', '0')
         self.change_and_update_settings('login', 'verify_account', '0')
@@ -98,6 +97,7 @@ class MainWindow(QMainWindow):
         self.ui.password.setReadOnly(False)
         self.ui.operator_box.setDisabled(False)
 
+    # 选择“自动选择”
     def show_chose_wifi_auto(self):
         if self.ui.auto_box.isChecked():
             self.ui.stu_box.setEnabled(False)
@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
             self.ui.free_box.setEnabled(True)
         self.update_chose_wifi()
 
+    # 选择Stu
     def show_chose_wifi_stu(self):
         if self.ui.stu_box.isChecked():
             self.ui.auto_box.setEnabled(False)
@@ -116,6 +117,7 @@ class MainWindow(QMainWindow):
             self.ui.free_box.setEnabled(True)
         self.update_chose_wifi()
 
+    # 选择Free
     def show_chose_wifi_free(self):
         if self.ui.free_box.isChecked():
             self.ui.stu_box.setEnabled(False)
@@ -125,6 +127,7 @@ class MainWindow(QMainWindow):
             self.ui.auto_box.setEnabled(True)
         self.update_chose_wifi()
 
+    # 更新选择的Stu或Free
     def update_chose_wifi(self):
         if self.ui.stu_box.isChecked():
             change_settings('settings', 'wifi_auto', '0')
@@ -139,6 +142,7 @@ class MainWindow(QMainWindow):
             change_settings('settings', 'wifi_free', '0')
             change_settings('settings', 'wifi_stu', '0')
 
+    # 刚进入页面显示的数据
     def show_start(self):
         if os.path.exists(path_account):
             with open(path_account) as f:
@@ -160,22 +164,14 @@ class MainWindow(QMainWindow):
                 announcement = f.read()
             self.ui.textBrowser_gg.setPlainText(announcement)
 
-    def show_before_qty(self):
-        if os.path.exists(path_stats):
-            with open(path_stats) as f:
-                s = json.load(f)
-            if s['da_qty'] == 0:
-                self.ui.tabWidget.setTabToolTip(4, "敬请期待")
-                self.ui.image_ds.hide()
-                self.ui.da_tet.hide()
-
+    # 设置账户，密码为只读
     def set_edit_readonly(self):
         self.ui.nc.setReadOnly(True)
         self.ui.username.setReadOnly(True)
         self.ui.password.setReadOnly(True)
         self.ui.operator_box.setDisabled(True)
-        # 设置LineEdit为只读
 
+    # 登入校园网，用ui界面
     def link_wifi_ui(self):
         self.ui.dr_textBrowser.setText("检测网络中……")
         QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
@@ -207,78 +203,7 @@ class MainWindow(QMainWindow):
                 tx = "出现未知问题"
             self.ui.dr_textBrowser.setText(tx)
 
-    def link_wifi_dialog(self):
-        # 创建一个对话框窗口
-        dialog1 = QDialog(self)
-        dialog1.setWindowTitle("自动登入")
-        # 在对话框中添加按钮和标签
-        label = QLabel('自动检测网络登入校园网中……请稍等', dialog1)
-        label.setAlignment(Qt.AlignCenter)
-        # 隐藏问号
-        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        dialog1.setLayout(layout)
-
-        def lin():
-            check_number_f = verify_wifi()
-            if check_number_f == 3:
-                link_wifi()
-                check_number = verify_wifi()
-                if check_number == 1:
-                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
-                elif check_number == 2:
-                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
-                elif check_number == 3:
-                    self.tx = "登入失败，请检查学号、密码和运营商是否正确"
-                elif check_number == 4:
-                    self.tx = "登入成功"
-                else:
-                    self.tx = "出现未知问题"
-            else:
-                if check_number_f == 1:
-                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
-                elif check_number_f == 2:
-                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
-                elif check_number_f == 4:
-                    self.tx = "我们检测到您已成功登入校园网，请勿重复登入。"
-                else:
-                    self.tx = "出现未知问题"
-            dialog1.close()
-
-        QTimer.singleShot(100, lin)
-        dialog1.exec_()
-
-        # 创建一个对话框窗口
-        dialog = QDialog(self)
-        dialog.setWindowTitle("自动登入")
-        # 在对话框中添加按钮和标签
-        label = QLabel(self.tx, dialog)
-        label.setAlignment(Qt.AlignCenter)
-        button1 = QPushButton("打开主界面", dialog)
-        button2 = QPushButton("关闭窗口", dialog)
-        button3 = QPushButton("打开校园网登入页面", dialog)
-        # 隐藏问号
-        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        # 隐藏退出按钮
-        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowCloseButtonHint)
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        layout.addWidget(button1)
-        layout.addWidget(button2)
-        layout.addWidget(button3)
-        dialog.setLayout(layout)
-        button1.clicked.connect(dialog.close)
-        button2.clicked.connect(sys.exit)
-
-        def url():
-            link_dr()
-            sys.exit()
-
-        button3.clicked.connect(url)
-        # 显示对话框
-        dialog.exec_()
-
+    # 初始显示账户界面信息
     def update_settings_ini(self):
         if os.path.exists(path_settings):
             set_ini = configparser.ConfigParser()
@@ -318,10 +243,12 @@ class MainWindow(QMainWindow):
                 self.ui.stu_box.setEnabled(False)
                 self.ui.auto_box.setEnabled(False)
 
+    # 修改设置文件
     def change_and_update_settings(self, section, option, value):
         change_settings(section, option, value)
         self.update_settings_ini()
 
+    # 保存设置，按钮用
     def save_settings(self):
         if self.ui.auto_start.isChecked():
             change_settings('settings', 'auto_start', '1')
@@ -348,6 +275,7 @@ class MainWindow(QMainWindow):
 
         self.update_settings_ini()
 
+    # 保存账户，按钮用
     def save_account(self):
         warning = ""
         nc = self.ui.nc.text()
@@ -367,12 +295,14 @@ class MainWindow(QMainWindow):
             warning = "账户保存成功，请点击‘验证账户’，验证账户是否可用，验证通过后即可使用该账户登入校园网"
             self.ui.dr_textBrowser.setText(warning)
 
+    # 是否显示密码
     def private_click(self):
         if self.ui.private_mm.isChecked():
             self.ui.password.setEchoMode(QLineEdit.Normal)
         else:
             self.ui.password.setEchoMode(QLineEdit.Password)
 
+    # 验证账户
     def yz_dr(self):
         # 创建一个对话框窗口
         dialog = QDialog(self)
@@ -436,46 +366,7 @@ class MainWindow(QMainWindow):
         # 显示对话框
         dialog.exec_()
 
-    def ds_qty(self):
-        # 创建一个对话框窗口
-        dialog = QDialog(self)
-        dialog.setWindowTitle("窗口")
-        self.tak = [
-            '我们检测到您已经使用了本程序一段时间，非常感谢您使用我们的程序！',
-            '我们目前的宣传渠道比较有限，如果您喜欢我们的应用，可以分享给您的朋友、同学。感谢您的支持！',
-            '如果您有什么意见或建议，可在程序右下角找到我的联系方式',
-            '如果你觉得本程序对你有用，也可以考虑给予支持。\n请按照自己的意愿和能力来决定是否打赏，无论如何，你仍可以继续免费使用本程序。\n注意：这条提醒仅出现一次，无论你的选择如何。',
-        ]
-        # 在对话框中添加按钮和标签
-        label = QLabel(self.tak[0])
-        label.setAlignment(Qt.AlignCenter)
-        button1 = QPushButton("下一步", dialog)
-        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowCloseButtonHint)
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        layout.addWidget(button1)
-        dialog.setLayout(layout)
-
-        def talk():
-            if label.text() == self.tak[-1]:
-                dialog.close()
-            else:
-                llk = len(self.tak)
-                for i in range(llk):
-                    if label.text() == self.tak[i] and i != llk - 1:
-                        label.setText(self.tak[i + 1])
-                        QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
-                        break
-                if label.text() == self.tak[-1]:
-                    button1.setText('我会考虑')
-                    layout.addWidget(button2)
-
-        button2 = QPushButton("不予考虑，我要白嫖到底")
-        button1.clicked.connect(talk)
-        button2.clicked.connect(dialog.close)
-        dialog.exec_()
-
+    # 初始化程序，按钮用
     def del_data(self):
         # 创建一个对话框窗口
         dialog = QDialog(self)
@@ -518,7 +409,8 @@ class MainWindow(QMainWindow):
         button2.clicked.connect(dialog.close)
         dialog.exec_()
 
-    def up_version(self):
+    # 检测版本更新，按钮用
+    def up_version(self):  # 检测版本更新
         dialog1 = QDialog(self)
         dialog1.setWindowTitle("更新……")
         # 在对话框中添加按钮和标签
@@ -555,7 +447,7 @@ class MainWindow(QMainWindow):
         label = QLabel(v_t, dialog)
         label.setAlignment(Qt.AlignCenter)
         button1 = QPushButton("打开github开源项目地址", dialog)
-        button2 = QPushButton(f"打开蓝奏云网盘以获取最新安装包，提取码：{lzy_password}（点击复制）", dialog)
+        button2 = QPushButton(f"打开蓝奏云网盘以获取最新安装包，提取码：{lzy_password}（自动复制）", dialog)
         button3 = QPushButton("关闭窗口", dialog)
         # 隐藏问号
         dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -582,34 +474,115 @@ class MainWindow(QMainWindow):
         # 显示对话框
         dialog.exec_()
 
+    # 一开始进入的登入页面，用于登入校园网
+    def link_wifi_dialog(self):
+        # 创建一个对话框窗口
+        dialog1 = QDialog(self)
+        dialog1.setWindowTitle("自动登入")
+        # 在对话框中添加按钮和标签
+        label = QLabel('自动检测网络登入校园网中……请稍等', dialog1)
+        label.setAlignment(Qt.AlignCenter)
+        # 隐藏问号
+        dialog1.setWindowFlags(dialog1.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        dialog1.setLayout(layout)
+        check_number_f = 0
 
-def da_gty():
-    if os.path.exists(path_stats):
-        with open(path_stats) as f:
-            s = json.load(f)
-        if s['da_qty'] == 0 and update_show_ds() == 1:
-            ppa = QApplication(sys.argv)
-            do = MainWindow()
-            do.link_wifi_ui()
-            do.ds_qty()
-            do.ui.tabWidget.setCurrentIndex(4)
-            do.show()
-            sys.exit(ppa.exec_())
+        def lin():
+            nonlocal check_number_f
+            check_number_f = verify_wifi()
+            if check_number_f == 3:
+                link_wifi()
+                check_number_f = verify_wifi()
+                if check_number_f == 1:
+                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
+                elif check_number_f == 2:
+                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
+                elif check_number_f == 3:
+                    self.tx = "登入失败，请检查学号、密码和运营商是否正确"
+                elif check_number_f == 4:
+                    self.tx = "登入成功"
+                else:
+                    self.tx = "出现未知问题"
+            else:
+                if check_number_f == 1:
+                    self.tx = "我们检测到您的网络未连接，请先手动连接校园网，然后再使用本程序。"
+                elif check_number_f == 2:
+                    self.tx = "我们检测到您已连接其他网络，请先切换到校园网后再使用本程序。"
+                elif check_number_f == 4:
+                    self.tx = "我们检测到您已成功登入校园网，请勿重复登入。"
+                else:
+                    self.tx = "出现未知问题"
+            dialog1.close()
 
+        QTimer.singleShot(100, lin)
+        dialog1.exec_()
 
-if __name__ == "__main__":
-    create_files()
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-    da_gty()
-    app = QApplication(sys.argv)
-    widget = MainWindow()
-    if os.path.exists(path_settings):
-        update_now_stats_days()
-        setting = configparser.ConfigParser()
-        setting.read(path_settings)
-        if setting['login']['verify_account'] == '1':
-            widget.link_wifi_dialog()
-    widget.show()
-    if update_announcement_days() == 1:
-        widget.update_announcement_now()
-    sys.exit(app.exec_())
+        # 创建一个对话框窗口
+        dialog = QDialog(self)
+        dialog.setWindowTitle("自动登入")
+        dialog.setWindowFlags(dialog.windowFlags() | Qt.WindowStaysOnTopHint)  # 设置为在最前端显示
+        # 在对话框中添加按钮和标签
+        label = QLabel(self.tx, dialog)
+        label.setAlignment(Qt.AlignCenter)
+        button1 = QPushButton("打开主界面", dialog)
+        button2 = QPushButton("关闭窗口", dialog)
+        button3 = QPushButton("打开校园网登入页面", dialog)
+
+        # 隐藏问号
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowContextHelpButtonHint)
+        # 隐藏退出按钮
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt.WindowCloseButtonHint)
+        layout = QVBoxLayout()
+        layout.addWidget(label)
+        layout.addWidget(button1)
+        layout.addWidget(button2)
+        layout.addWidget(button3)
+        dialog.setLayout(layout)
+
+        def open_main():
+            timer.stop()
+            dialog.close()
+
+        button1.clicked.connect(open_main)
+        button2.clicked.connect(sys.exit)
+
+        def url():
+            link_dr()
+            sys.exit()
+
+        button3.clicked.connect(url)
+
+        # 创建一个 QTimer
+        timer = QTimer(dialog)
+        djs = 5  # 倒计时
+        djs_text = f"自动退出倒计时：{djs}!"
+        label1 = QLabel(djs_text, dialog)
+        label1.setAlignment(Qt.AlignCenter)
+        font = QFont()
+        font.setPointSize(16)  # 设置字体大小为 16
+        label1.setFont(font)  # 设置标签的字体
+        layout.addWidget(label1)
+
+        pd = 0
+
+        def update_label():
+            nonlocal djs  # 使用外部变量
+            nonlocal pd
+            nonlocal check_number_f
+            if pd == 0:
+                if check_number_f == 3 or check_number_f == 1:
+                    djs = 999
+            pd = 1
+            djs -= 1
+            label1.setText(f"自动退出倒计时：{djs}!")
+            dialog.update()  # 更新界面
+            if djs == 0:
+                sys.exit()
+
+        timer.timeout.connect(update_label)  # 连接定时器的timeout信号到更新函数
+        timer.start(1000)  # 每1000毫秒（1秒）触发一次定时器
+
+        # 显示对话框
+        dialog.exec_()

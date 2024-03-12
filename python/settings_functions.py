@@ -1,7 +1,9 @@
 import os
 import re
 import winreg
+
 import winshell
+
 from path import path_program
 
 
@@ -76,4 +78,4 @@ def check_version(version):
 
 key_name = "Auto_login_ECJTU_wifi"  # 注册表中自启动程序的键名
 
-ink_name = "自动登入校园网2.0"
+ink_name = "自动登入校园网"

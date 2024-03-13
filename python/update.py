@@ -1,11 +1,14 @@
+import configparser
 import datetime
 import json
 import os
+import path
 
 import requests
+from PySide2.QtWidgets import QMessageBox
 
-from login import get_today
-from path import path_announcement, path_stats, announcement_url, version_url
+from login import get_today, get_nc
+from path import path_announcement, path_stats, announcement_url, version_url, path_settings
 
 
 # 更新公告
@@ -64,3 +67,49 @@ def update_app_version():
     except Exception as p:
         k = p
         return "出现未知问题，请注意检查网络连接，或点击“打开源地址”检查更新版本"
+
+
+# 初始显示账户界面信息
+def update_settings_ini(self):
+    if os.path.exists(path_settings):
+        set_ini = configparser.ConfigParser()
+        set_ini.read(path_settings)
+
+        if set_ini["login"]["save_account"] == "0":
+            self.ui.dr_button.setEnabled(True)
+            self.ui.dr_yz_pushButton.setText('验证账户')
+            self.ui.change_account_pushButton.setEnabled(False)
+            self.ui.dr_yz_pushButton.setEnabled(False)
+        else:
+            self.set_edit_readonly()
+            if set_ini['login']['verify_account'] == '0':
+                self.ui.dr_yz_pushButton.setText('验证账户')
+                self.ui.dr_yz_pushButton.setEnabled(True)
+                if not path.have_save_account:
+                    QMessageBox.warning(self, "提示", "账户未验证，请验证账户", QMessageBox.Ok)
+            else:
+                self.ui.lineEdit_nc.setText(get_nc())
+                self.ui.dr_yz_pushButton.setText('已验证')
+                self.ui.dr_yz_pushButton.setEnabled(False)
+            self.ui.dr_button.setEnabled(False)
+            self.ui.change_account_pushButton.setEnabled(True)
+        if set_ini['login']['verify_account'] == '0':
+            self.ui.login_button.setEnabled(False)
+        else:
+            self.ui.login_button.setEnabled(True)
+        if set_ini['settings']['auto_start'] == '0':
+            self.ui.auto_start.setChecked(False)
+        else:
+            self.ui.auto_start.setChecked(True)
+        if set_ini['settings']['wifi_auto'] == '1':
+            self.ui.auto_box.setChecked(True)
+            self.ui.stu_box.setEnabled(False)
+            self.ui.free_box.setEnabled(False)
+        if set_ini['settings']['wifi_stu'] == '1':
+            self.ui.stu_box.setChecked(True)
+            self.ui.auto_box.setEnabled(False)
+            self.ui.free_box.setEnabled(False)
+        if set_ini['settings']['wifi_free'] == '1':
+            self.ui.free_box.setChecked(True)
+            self.ui.stu_box.setEnabled(False)
+            self.ui.auto_box.setEnabled(False)

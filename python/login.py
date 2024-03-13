@@ -6,8 +6,8 @@ import re
 
 import requests
 
-from path import path_header, path_settings, path_data, path_account, path_private, path_stats, path_data_free, \
-    github_url, dr_url, lzy_password, lzy_url
+from path import path_header, path_settings, path_account, path_private, path_stats, \
+    github_url, dr_url, lzy_password, lzy_url, baidu_url
 
 
 def open_lzy():  # 打开蓝奏云网盘
@@ -24,18 +24,16 @@ def link_dr():  # 打开校园网验证地址
     os.system(f'start {dr_url}')
 
 
-def get_nc():
+def get_nc():  # 获取账号key（昵称）
     with open(path_account) as f:
         account = json.load(f)
     return list(account.keys())[0]
 
 
-def get_post_url():
-    url = "http://172.16.2.100/"
-    html = requests.get(url).text
+def get_post_url():  # 获取post地址
+    html = requests.get(dr_url).text
     ip4_y = re.search("v4ip='(.*?)';", html, re.S)
     ip4_n = re.search("v46ip='(.*?)' ", html, re.S)
-    v46ip = '10.32.0.223'
     if ip4_y is None:
         ip4 = ip4_n.group(1)
     else:
@@ -45,37 +43,13 @@ def get_post_url():
             f"&queryACIP=0&loginMethod=1")
 
 
-def get_post_data():
-    with open(path_data) as f:
-        post_data = json.load(f)
-    return post_data
-
-
-def get_post_data_free():
-    with open(path_data_free) as f:
-        post_data_free = json.load(f)
-    return post_data_free
-
-
-def get_post_header():
-    with open(path_header) as f:
-        post_header = json.load(f)
-    return post_header
-
-
-def get_operator_last(operator):
-    if operator == '中国移动':
-        kk = '@cmcc'
-    elif operator == '中国电信':
-        kk = '@telecom'
-    elif operator == '中国联通':
-        kk = '@unicom'
-    else:
-        kk = '没有选择运营商'
-    return kk
-
-
-def save_post_data_header(username, password, operator):
+def get_post_data():  # 获取post数据
+    nc = get_nc()
+    with open(path_account, 'r') as f_account:
+        account = json.load(f_account)
+    username = account[nc][0]
+    password = account[nc][1]
+    operator = account[nc][2]
     post_data = {
         "DDDDD": f",0,{username}{get_operator_last(operator)}",
         "upass": f"{password}",
@@ -94,6 +68,15 @@ def save_post_data_header(username, password, operator):
         "cmd": "",
         "Login": ""
     }
+    return post_data
+
+
+def get_post_data_free():  # 获取post数据，用于图书馆免费网络登入
+    nc = get_nc()
+    with open(path_account, 'r') as f_account:
+        account = json.load(f_account)
+    username = account[nc][0]
+    password = account[nc][1]
     post_data_free = {
         "DDDDD": f",0,{username}",
         "upass": f"{password}",
@@ -112,24 +95,44 @@ def save_post_data_header(username, password, operator):
         "cmd": "",
         "Login": ""
     }  # 用于图书馆免费网络登入
+    print()
+    return post_data_free
+
+
+def get_post_header():  # 获取header
+    with open(path_header) as f:
+        post_header = json.load(f)
+    return post_header
+
+
+def get_operator_last(operator):
+    if operator == '中国移动':
+        kk = '@cmcc'
+    elif operator == '中国电信':
+        kk = '@telecom'
+    elif operator == '中国联通':
+        kk = '@unicom'
+    else:
+        kk = '没有选择运营商'
+    return kk
+
+
+# 保存post数据的header
+def save_post_data_header():
     post_header = {  # 拿来的
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 "
                       "Safari/537.36"
     }
-    with open(path_data, 'w') as f_d:
-        json.dump(post_data, f_d)
-    with open(path_data_free, 'w') as f_d_f:
-        json.dump(post_data_free, f_d_f)
     with open(path_header, 'w') as f_h:
         json.dump(post_header, f_h)
 
 
-def save_account(nc, username, password, operator):
+def save_account(nc, username, password, operator):  # 保存账号密码
     if nc == "":
         nc = username
     with open(path_account, 'w') as f_account:
         json.dump({nc: [username, password, operator]}, f_account)
-    save_post_data_header(username, password, operator)
+    save_post_data_header()
 
 
 def link_wifi():  # 登入校园网
@@ -140,7 +143,6 @@ def link_wifi():  # 登入校园网
 
     elif settings['settings']['wifi_stu'] == '1':
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
-
     else:
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
         if verify_wifi() == 3:
@@ -195,7 +197,7 @@ def create_files():  # 第一次运行，创建文件
         dat = {
             "begin_day": get_today(),  # 开始使用时间
             "now_day": get_today(),  # 当前时间
-            "announcement_day": "not updated",  # 公告更新时间
+            "announcement_day": "",  # 公告更新时间
             "stats_days": 0,  # 统计使用天数
             "stats_times": 0,  # 统计使用次数
         }
@@ -222,23 +224,21 @@ def verify_wifi():  # 验证网络连接状态
     3: 连接了校园网，但未登入
     4: 连接了校园网，已登入
     """
-    url1 = 'http://172.16.2.100'
-    url2 = 'https://www.baidu.com/'
     try:
-        requests.get(url2, timeout=0.5)
+        requests.get(baidu_url, timeout=0.5)
     except requests.exceptions.ConnectionError:
         try:
-            requests.get(url1, timeout=0.5)
+            requests.get(dr_url, timeout=0.5)
         except requests.exceptions.ConnectionError:
             return 1
     try:
-        requests.get(url1, timeout=0.5)
+        requests.get(dr_url, timeout=0.5)
     except requests.exceptions.Timeout:
-        if requests.get(url2).status_code == requests.codes.ok:
+        if requests.get(baidu_url).status_code == requests.codes.ok:
             return 2
     else:
         try:
-            requests.get(url2, timeout=0.5)
+            requests.get(baidu_url, timeout=0.5)
         except requests.exceptions.Timeout:
             return 3
         else:

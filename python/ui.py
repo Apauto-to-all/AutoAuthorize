@@ -318,16 +318,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.button_del_all, 9, 0, 1, 1)
 
-        self.desktop_button = QPushButton(self.scrollAreaWidgetContents_2)
-        self.desktop_button.setObjectName(u"desktop_button")
-
-        self.gridLayout_7.addWidget(self.desktop_button, 1, 0, 1, 1)
-
-        self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
-        self.up_v.setObjectName(u"up_v")
-
-        self.gridLayout_7.addWidget(self.up_v, 0, 3, 1, 1)
-
         self.auto_start = QCheckBox(self.scrollAreaWidgetContents_2)
         self.auto_start.setObjectName(u"auto_start")
 
@@ -345,21 +335,31 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 1, 1, 1)
 
-        self.link_github = QCommandLinkButton(self.scrollAreaWidgetContents_2)
-        self.link_github.setObjectName(u"link_github")
-
-        self.gridLayout_7.addWidget(self.link_github, 5, 3, 1, 1)
-
         self.link_dr = QCommandLinkButton(self.scrollAreaWidgetContents_2)
         self.link_dr.setObjectName(u"link_dr")
 
-        self.gridLayout_7.addWidget(self.link_dr, 4, 3, 1, 1)
+        self.gridLayout_7.addWidget(self.link_dr, 0, 3, 1, 1)
+
+        self.link_github = QCommandLinkButton(self.scrollAreaWidgetContents_2)
+        self.link_github.setObjectName(u"link_github")
+
+        self.gridLayout_7.addWidget(self.link_github, 1, 3, 1, 1)
 
         self.lzy_pushButton = QPushButton(self.scrollAreaWidgetContents_2)
         self.lzy_pushButton.setObjectName(u"lzy_pushButton")
         self.lzy_pushButton.setToolTipDuration(0)
 
         self.gridLayout_7.addWidget(self.lzy_pushButton, 3, 3, 1, 1)
+
+        self.desktop_button = QPushButton(self.scrollAreaWidgetContents_2)
+        self.desktop_button.setObjectName(u"desktop_button")
+
+        self.gridLayout_7.addWidget(self.desktop_button, 1, 0, 1, 1)
+
+        self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
+        self.up_v.setObjectName(u"up_v")
+
+        self.gridLayout_7.addWidget(self.up_v, 3, 0, 1, 1)
 
         self.scrollArea_2.setWidget(self.scrollAreaWidgetContents_2)
 
@@ -372,15 +372,19 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName(u"tab_3")
         self.gridLayout_6 = QGridLayout(self.tab_3)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.upadte_announcement_now = QPushButton(self.tab_3)
-        self.upadte_announcement_now.setObjectName(u"upadte_announcement_now")
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.gridLayout_6.addWidget(self.upadte_announcement_now, 2, 2, 1, 1)
+        self.gridLayout_6.addItem(self.horizontalSpacer_7, 0, 2, 1, 1)
 
         self.label_10 = QLabel(self.tab_3)
         self.label_10.setObjectName(u"label_10")
 
         self.gridLayout_6.addWidget(self.label_10, 0, 0, 1, 1)
+
+        self.upadte_announcement_now = QPushButton(self.tab_3)
+        self.upadte_announcement_now.setObjectName(u"upadte_announcement_now")
+
+        self.gridLayout_6.addWidget(self.upadte_announcement_now, 2, 2, 1, 1)
 
         self.textBrowser_gg = QTextBrowser(self.tab_3)
         self.textBrowser_gg.setObjectName(u"textBrowser_gg")
@@ -394,9 +398,9 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.up_announcement_day, 0, 1, 1, 1)
 
-        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_12 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.gridLayout_6.addItem(self.horizontalSpacer_7, 0, 2, 1, 1)
+        self.gridLayout_6.addItem(self.horizontalSpacer_12, 2, 1, 1, 1)
 
         icon4 = QIcon()
         icon4.addFile(u":/image/image/message_square_icon.png", QSize(), QIcon.Active, QIcon.On)
@@ -517,11 +521,9 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.save_settings.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58\u8bbe\u7f6e", None))
         self.button_del_all.setText(QCoreApplication.translate("MainWindow", u"\u521d\u59cb\u5316\u7a0b\u5e8f", None))
-        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
-        self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.auto_start.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u673a\u81ea\u542f\uff08\u63a8\u8350\u6253\u5f00\uff09", None))
-        self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
         self.link_dr.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u767b\u5165\u9875\u9762", None))
+        self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
 #if QT_CONFIG(tooltip)
         self.lzy_pushButton.setToolTip(QCoreApplication.translate("MainWindow", u"\u70b9\u51fb\u81ea\u52a8\u590d\u5236\u63d0\u53d6\u7801", None))
 #endif // QT_CONFIG(tooltip)
@@ -529,12 +531,14 @@ class Ui_MainWindow(object):
         self.lzy_pushButton.setWhatsThis("")
 #endif // QT_CONFIG(whatsthis)
         self.lzy_pushButton.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u84dd\u594f\u4e91\u7f51\u76d8\uff08\u63d0\u53d6\u7801\uff1aecjtu\uff09", None))
+        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
+        self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u8bbe\u7f6e", None))
 #endif // QT_CONFIG(tooltip)
-        self.upadte_announcement_now.setText(QCoreApplication.translate("MainWindow", u"\u7acb\u5373\u66f4\u65b0\u516c\u544a", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"\u4e0a\u6b21\u66f4\u65b0\u65f6\u95f4:", None))
+        self.upadte_announcement_now.setText(QCoreApplication.translate("MainWindow", u"\u7acb\u5373\u66f4\u65b0\u516c\u544a", None))
         self.textBrowser_gg.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u68c0\u6d4b\u5230\u516c\u544a\u672a\u52a0\u8f7d\uff0c\u8bf7\u5728\u8054\u7f51\u73af\u5883\u4e0b\uff0c\u624b\u52a8\u70b9\u51fb\u201c\u7acb\u523b\u66f4\u65b0\u516c\u544a\u201d\u6309\u94ae", None))
         self.up_announcement_day.setText(QCoreApplication.translate("MainWindow", u"\u672a\u66f4\u65b0", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), "")

@@ -126,7 +126,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.login_button = QPushButton(self.tab)
         self.login_button.setObjectName(u"login_button")
-        self.login_button.setStyleSheet(u"color: green")
+        self.login_button.setStyleSheet(u"color: green;")
 
         self.horizontalLayout_5.addWidget(self.login_button)
 
@@ -237,23 +237,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.auto_start, 0, 0, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.gridLayout_7.addItem(self.verticalSpacer_2, 11, 0, 1, 4)
-
         self.up_v = QPushButton(self.scrollAreaWidgetContents_2)
         self.up_v.setObjectName(u"up_v")
 
         self.gridLayout_7.addWidget(self.up_v, 9, 0, 1, 1)
 
-        self.link_dr = QCommandLinkButton(self.scrollAreaWidgetContents_2)
-        self.link_dr.setObjectName(u"link_dr")
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.gridLayout_7.addWidget(self.link_dr, 0, 3, 1, 1)
-
-        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 1, 1, 1)
+        self.gridLayout_7.addItem(self.horizontalSpacer_10, 12, 1, 1, 3)
 
         self.button_del_all = QPushButton(self.scrollAreaWidgetContents_2)
         self.button_del_all.setObjectName(u"button_del_all")
@@ -261,19 +252,47 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.button_del_all, 12, 0, 1, 1)
 
-        self.lzy_pushButton = QPushButton(self.scrollAreaWidgetContents_2)
-        self.lzy_pushButton.setObjectName(u"lzy_pushButton")
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.wait_time = QDoubleSpinBox(self.scrollAreaWidgetContents_2)
+        self.wait_time.setObjectName(u"wait_time")
+        self.wait_time.setContextMenuPolicy(Qt.NoContextMenu)
+        self.wait_time.setAcceptDrops(False)
+        self.wait_time.setMinimum(0.100000000000000)
+        self.wait_time.setValue(1.000000000000000)
 
-        self.gridLayout_7.addWidget(self.lzy_pushButton, 7, 3, 1, 1)
+        self.horizontalLayout_4.addWidget(self.wait_time)
+
+        self.wait_time_Button = QPushButton(self.scrollAreaWidgetContents_2)
+        self.wait_time_Button.setObjectName(u"wait_time_Button")
+
+        self.horizontalLayout_4.addWidget(self.wait_time_Button)
+
+
+        self.gridLayout_7.addLayout(self.horizontalLayout_4, 5, 0, 1, 1)
 
         self.desktop_button = QPushButton(self.scrollAreaWidgetContents_2)
         self.desktop_button.setObjectName(u"desktop_button")
 
         self.gridLayout_7.addWidget(self.desktop_button, 7, 0, 1, 1)
 
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.gridLayout_7.addItem(self.horizontalSpacer_10, 12, 1, 1, 3)
+        self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 1, 1, 1)
+
+        self.link_dr = QCommandLinkButton(self.scrollAreaWidgetContents_2)
+        self.link_dr.setObjectName(u"link_dr")
+
+        self.gridLayout_7.addWidget(self.link_dr, 0, 3, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer_2, 11, 0, 1, 4)
+
+        self.lzy_pushButton = QPushButton(self.scrollAreaWidgetContents_2)
+        self.lzy_pushButton.setObjectName(u"lzy_pushButton")
+
+        self.gridLayout_7.addWidget(self.lzy_pushButton, 7, 3, 1, 1)
 
         self.link_github = QCommandLinkButton(self.scrollAreaWidgetContents_2)
         self.link_github.setObjectName(u"link_github")
@@ -435,7 +454,7 @@ class Ui_MainWindow(object):
 
         self.tuo = QPushButton(self.centralwidget)
         self.tuo.setObjectName(u"tuo")
-        self.tuo.setStyleSheet(u"color: green")
+        self.tuo.setStyleSheet(u"color: green;")
 
         self.horizontalLayout.addWidget(self.tuo)
 
@@ -503,8 +522,10 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.auto_start.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u673a\u81ea\u542f\uff08\u63a8\u8350\u6253\u5f00\uff09", None))
         self.up_v.setText(QCoreApplication.translate("MainWindow", u"\u68c0\u67e5\u66f4\u65b0", None))
-        self.link_dr.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u767b\u5165\u9875\u9762", None))
         self.button_del_all.setText(QCoreApplication.translate("MainWindow", u"\u521d\u59cb\u5316\u7a0b\u5e8f", None))
+        self.wait_time_Button.setText(QCoreApplication.translate("MainWindow", u"\u8bf4\u660e", None))
+        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
+        self.link_dr.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u767b\u5165\u9875\u9762", None))
 #if QT_CONFIG(tooltip)
         self.lzy_pushButton.setToolTip(QCoreApplication.translate("MainWindow", u"\u70b9\u51fb\u8be5\u6309\u94ae\uff0c\u7a0b\u5e8f\u4f1a\u81ea\u52a8\u5e2e\u4f60\u590d\u5236\u63d0\u53d6\u7801\uff0c\u5728\u84dd\u594f\u4e91\u7f51\u76d8\u754c\u9762\u53ef\u76f4\u63a5\u7c98\u8d34", None))
 #endif // QT_CONFIG(tooltip)
@@ -512,7 +533,6 @@ class Ui_MainWindow(object):
         self.lzy_pushButton.setWhatsThis("")
 #endif // QT_CONFIG(whatsthis)
         self.lzy_pushButton.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u84dd\u594f\u4e91\u7f51\u76d8\uff08\u63d0\u53d6\u7801\uff1aecjtu\uff09", None))
-        self.desktop_button.setText(QCoreApplication.translate("MainWindow", u"\u521b\u5efa\u684c\u9762\u5feb\u6377\u65b9\u5f0f", None))
         self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
 #if QT_CONFIG(tooltip)

@@ -1,14 +1,18 @@
 import sys
 
-version = 'v2.2.3'  # 当前程序版本号
+version = 'v2.2.4'  # 当前程序版本号
 
 main_have_open = 0  # 全局变量：是否已经打开主界面
 
 have_save_account = 0  # 全局变量：是否已经保存账号
 
-wait_time = 120  # 全局变量：等待时间
+wait_time = 2  # 全局变量：等待时间，分钟
 
-path_base = r'personalData'  # 保存数据的文件夹
+# 一些监测信息
+monitor_num = 0  # 监测次数
+run_mun = 0  # 运行次数
+
+path_base = r'C:/Auto_Login_ECJTU_Wifi_Data'  # 保存数据的文件夹
 
 path_private = path_base + r'/data/private'  # 保存私人数据的文件夹
 

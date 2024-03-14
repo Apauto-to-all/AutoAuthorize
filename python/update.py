@@ -14,7 +14,7 @@ from path import path_announcement, path_stats, announcement_url, version_url, p
 # 更新公告
 def update_announcement():
     try:
-        request = requests.get(announcement_url, timeout=8)
+        request = requests.get(announcement_url, timeout=5)
         with open(path_announcement, "wb") as f:
             f.write(request.content)  # 将公告内容写入文件
         # 更新公告时间
@@ -56,7 +56,7 @@ def update_now_stats_days():
 # 检查版本
 def update_app_version():
     try:
-        response = requests.get(version_url, timeout=8)
+        response = requests.get(version_url, timeout=5)
         if response.status_code == 200:
             v = response.text
             return v
@@ -64,8 +64,7 @@ def update_app_version():
             return "检查失败，请注意检查网络连接，或点击“打开源地址”检查更新版本"
     except requests.exceptions.ConnectTimeout:
         return "超时，请注意检查网络连接，或重新检测，或点击“打开源地址”检查更新版本"
-    except Exception as p:
-        k = p
+    except Exception:
         return "出现未知问题，请注意检查网络连接，或点击“打开源地址”检查更新版本"
 
 
@@ -74,6 +73,9 @@ def update_settings_ini(self):
     if os.path.exists(path_settings):
         set_ini = configparser.ConfigParser()
         set_ini.read(path_settings)
+
+        self.ui.wait_time.setValue(float(set_ini['settings']['wait_time']))
+        path.wait_time = float(set_ini['settings']['wait_time'])
 
         if set_ini["login"]["save_account"] == "0":
             self.ui.dr_button.setEnabled(True)

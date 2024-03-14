@@ -1,3 +1,4 @@
+import os
 import re
 import winreg
 
@@ -38,6 +39,12 @@ def desktop():
     desk_path = winshell.desktop()
     lnk_path = desk_path + '\\' + ink_name + '.lnk'
     winshell.CreateShortcut(lnk_path, path_program)
+
+
+def del_desktop():
+    desk_path = winshell.desktop()
+    lnk_path = desk_path + '\\' + ink_name + '.lnk'
+    os.remove(lnk_path)
 
 
 # 检查版本

@@ -146,8 +146,10 @@ def link_wifi():  # 登入校园网
     else:
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
         if verify_wifi() == 3:
-            logout()
-            requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+            try:
+                logout()
+            except Exception:
+                requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
 
     with open(path_stats) as f:
         stats_f = json.load(f)
@@ -189,6 +191,7 @@ def create_files():  # 第一次运行，创建文件
             "wifi_auto": "1",  # 选择WiFi，默认选择“自动选择”
             "wifi_free": "0",
             "wifi_stu": "0",
+            "wait_time": 1,  # 等待时间
         }
         # 写入到文件
         with open(path_settings, 'w') as config_file:

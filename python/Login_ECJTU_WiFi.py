@@ -1,3 +1,4 @@
+import configparser
 import json
 import os
 import sys
@@ -12,22 +13,21 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QLineEdit, QDialog, QLa
 from login import verify_wifi, save_account, change_settings, link_wifi, \
     link_github, link_dr, open_lzy, logout
 from path import path_announcement, path_account, path_stats, path_base, version, lzy_url, lzy_password
-from settings_functions import desktop, check_version, create_regedit, del_regedit
+from settings_functions import desktop, check_version, create_regedit, del_regedit, del_desktop
 from ui import Ui_MainWindow
 from update import update_announcement, update_app_version, update_settings_ini
-from palletRun import TrayIcon
+from palletRun import TrayIcon, show_message
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.trayIcon = None
-        self.tak = None
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         # 初始显示
         self.show_start()
-        update_settings_ini(self)  # 更新设置文件
+        update_settings_ini(self)  # 设置文件的显示
         # 功能
         self.ui.dr_button.clicked.connect(self.save_account)  # 保存账户按钮
 
@@ -69,11 +69,44 @@ class MainWindow(QMainWindow):
 
         self.ui.tuo.clicked.connect(self.pallet_run)  # 托盘运行程序，监测校园网连接状态
 
+        self.ui.wait_time.valueChanged.connect(self.wait_time_change)  # 修改等待时间
+
+        self.ui.wait_time_Button.clicked.connect(self.wait_time_explain)  # 对等待时间的说明按钮
+
+    # 修改等待时间
+    def wait_time_change(self):
+        change_settings('settings', 'wait_time', str(self.ui.wait_time.value()))
+        set_ini = configparser.ConfigParser()
+        set_ini.read(path.path_settings)
+        path.wait_time = float(set_ini['settings']['wait_time'])
+
+    # 对等待时间的说明
+    def wait_time_explain(self):
+        QMessageBox.information(self, '说明',
+                                f'在托盘运行时，间隔一定时间检测校园网是否断开，用于修改间隔时间\n单位为：分钟\n目前设置：{path.wait_time}分钟检测一次校园网是否断开',
+                                QMessageBox.Ok)
+
     # 托盘运行
     def pallet_run(self):
-        # self.hide()
-        # 创建托盘运行程序
-        self.trayIcon = TrayIcon()
+        setting = configparser.ConfigParser()
+        setting.read(path.path_settings)
+        if setting['login']['verify_account'] == '1':
+            # 获取当前的 QApplication 实例
+            app = QApplication.instance()
+            # 将 quitOnLastWindowClosed 属性设置为 False。即使所有的窗口都被关闭，应用程序也不会退出。
+            app.setQuitOnLastWindowClosed(False)
+
+            show_message("提示", "程序已经在托盘处运行，持续为你监测校园网……\n右键点击图标可以进行相关操作")
+            # 已经验证账户，可以使用此功能
+            self.hide()
+            # 创建托盘运行程序
+            path.monitor_num = path.run_mun = 0
+            self.trayIcon = TrayIcon(self)
+        else:
+            if setting['login']['save_account'] == '1':
+                QMessageBox.warning(self, '警告', '未验证账户，无法使用此功能', QMessageBox.Ok)
+            else:
+                QMessageBox.warning(self, '警告', '账户不存在，无法使用此功能', QMessageBox.Ok)
 
     # 更新公告
     def update_announcement_now(self):  # 立即更新公告
@@ -118,7 +151,7 @@ class MainWindow(QMainWindow):
         button1.clicked.connect(dialog.close)
         dialog.exec_()
 
-    # 选择修改账户，数据初始化
+    # 修改账户，数据初始化
     def restore_line_edit(self):
         self.change_and_update_settings('login', 'save_account', '0')
         self.change_and_update_settings('login', 'verify_account', '0')
@@ -129,8 +162,11 @@ class MainWindow(QMainWindow):
 
     # 注销校园网账户
     def logout_account(self):
-        logout()
-        QMessageBox.information(self, '提示', '注销成功', QMessageBox.Ok)
+        try:
+            logout()
+            QMessageBox.information(self, '提示', '注销成功', QMessageBox.Ok)
+        except Exception:
+            QMessageBox.warning(self, '提示', '无需注销', QMessageBox.Ok)
 
     # 选择“自动选择”
     def show_chose_wifi_auto(self):
@@ -281,7 +317,9 @@ class MainWindow(QMainWindow):
                     self.change_and_update_settings('login', 'verify_account', '1')
                     QMessageBox.information(self, '成功', '验证成功！欢迎你使用本程序')
                 else:
-                    QMessageBox.warning(self, '警告', '验证失败，请重新检查学号、密码、运营商是否正确', QMessageBox.Ok)
+                    QMessageBox.warning(self, '警告',
+                                        '验证失败，请重新检查学号、密码、运营商是否正确\nECJTU_Stu和EcjtuLib_Free网络的选择是否正确',
+                                        QMessageBox.Ok)
                 dialog.close()
             elif check_number == 4:
                 label.setText("检测到你已连接校园网，处于登入状态，正在登出校园网")
@@ -299,6 +337,8 @@ class MainWindow(QMainWindow):
                 else:
                     tx = "出现未知问题"
                 QMessageBox.warning(self, '警告', tx, QMessageBox.Ok)
+                label.setText('检测失败，请重新点击“开始验证”')
+                QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
             label.setText('检测失败，请重新点击“开始验证”')
             QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
 
@@ -342,6 +382,7 @@ class MainWindow(QMainWindow):
                 # 最后删除根文件夹
                 os.rmdir(path_base)
                 del_regedit()
+                del_desktop()
                 dialog.close()
                 sys.exit()
 

@@ -267,7 +267,7 @@ def verify_wifi():  # 验证网络连接状态
     if wifi_name is None:
         return islink()
     else:
-        if wifi_name == "EcjtuLib_Free" or wifi_name == "ECJTU-Stu" or wifi_name == 'T436Q':  # 已连接校园网
+        if wifi_name == "EcjtuLib_Free" or wifi_name == "ECJTU-Stu":  # 已连接校园网
             try:
                 requests.get(dr_url, timeout=0.5)  # 尝试连接校园网验证地址
             except requests.exceptions.RequestException:

@@ -385,7 +385,6 @@ class MainWindow(QMainWindow):
                 label.setText("检测到你已连接校园网，处于登入状态，正在登出校园网")
                 QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
                 from login import logout
-
                 logout()
                 label.setText("已注销校园网，正在重新验证账户")
                 QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
@@ -400,8 +399,6 @@ class MainWindow(QMainWindow):
                 QMessageBox.warning(self, "警告", tx, QMessageBox.Ok)
                 label.setText("检测失败，请重新点击“开始验证”")
                 QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
-            label.setText("检测失败，请重新点击“开始验证”")
-            QApplication.processEvents()  # 强制处理待处理的事件，确保界面更新
 
         button1.clicked.connect(verify_account)
         button2.clicked.connect(dialog.close)
@@ -481,20 +478,20 @@ class MainWindow(QMainWindow):
             number2 = int(self.v.replace("v", "").replace(".", ""))
             if number1 < number2:
                 v_t = (
-                    version
-                    + "-->"
-                    + self.v
-                    + "\n 有最新版本，请点击“打开源地址”以更新程序"
+                        version
+                        + "-->"
+                        + self.v
+                        + "\n 有最新版本，请点击“打开源地址”以更新程序"
                 )
             elif number1 == number2:
                 v_t = version + "-->" + self.v + "\n 版本无变化，请关闭窗口"
             else:
                 v_t = (
-                    "???"
-                    + version
-                    + "-->"
-                    + self.v
-                    + "???\n出现问题，请点击“打开源地址”以手动检测最新版本"
+                        "???"
+                        + version
+                        + "-->"
+                        + self.v
+                        + "???\n出现问题，请点击“打开源地址”以手动检测最新版本"
                 )
         else:
             v_t = self.v
@@ -560,7 +557,7 @@ class MainWindow(QMainWindow):
                     link_wifi()
                     check_number_f = verify_wifi()
                     if check_number_f == 3:
-                        tx = "登入失败，请检查学号、密码和运营商是否正确"
+                        tx = "登入失败，请检查学号、密码，运营商是否正确\nECJTU_Stu和EcjtuLib_Free网络的选择是否正确"
                     elif check_number_f == 4:
                         tx = "登入成功"
                     else:

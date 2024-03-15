@@ -134,7 +134,7 @@ def get_operator_last(operator):
 def save_post_data_header():
     post_header = {  # 拿来的
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 "
-        "Safari/537.36"
+                      "Safari/537.36"
     }
     with open(path_header, "w") as f_h:
         json.dump(post_header, f_h)
@@ -156,7 +156,7 @@ def get_connected_wifi_name():
     lines = result.split("\n")  # 将输出分割成行
     for line in lines:  # 遍历每一行
         if (
-            "SSID" in line and "BSSID" not in line
+                "SSID" in line and "BSSID" not in line
         ):  # 如果这一行包含"SSID"但不包含"BSSID"
             return line.split(":")[1].strip()  # 返回这一行的第二部分（即WiFi名称）
     return None  # 如果没有找到WiFi名称，返回None
@@ -263,22 +263,43 @@ def verify_wifi():  # 验证网络连接状态
     3: 连接了校园网，但未登入
     4: 连接了校园网，已登入
     """
+    wifi_name = get_connected_wifi_name()
+    if wifi_name is None:
+        return islink()
+    else:
+        if wifi_name == "EcjtuLib_Free" or wifi_name == "ECJTU-Stu" or wifi_name == 'T436Q':  # 已连接校园网
+            try:
+                requests.get(dr_url, timeout=0.5)  # 尝试连接校园网验证地址
+            except requests.exceptions.RequestException:
+                return islink()
+            else:
+                try:
+                    requests.get(baidu_url, timeout=0.5)
+                except requests.exceptions.RequestException:
+                    return 3  # 连接了校园网，但未登入
+                else:
+                    return 4  # 连接了校园网，已登入
+        else:
+            return 2  # 已连接其他网络
+
+
+def islink():
     try:
-        requests.get(baidu_url, timeout=0.5)
-    except requests.exceptions.ConnectionError:
+        requests.get(baidu_url, timeout=0.5)  # 尝试连接百度
+    except requests.exceptions.RequestException:  # 网络未连接
         try:
-            requests.get(dr_url, timeout=0.5)
-        except requests.exceptions.ConnectionError:
-            return 1
+            requests.get(dr_url, timeout=0.5)  # 尝试连接校园网验证地址
+        except requests.exceptions.RequestException:
+            return 1  # 校园网未连接
     try:
-        requests.get(dr_url, timeout=0.5)
-    except requests.exceptions.Timeout:
-        if requests.get(baidu_url).status_code == requests.codes.ok:
-            return 2
+        requests.get(dr_url, timeout=0.5)  # 尝试连接校园网验证地址
+    except requests.exceptions.RequestException:
+        if requests.get(baidu_url).status_code == requests.codes.ok:  # 连接百度成功，但连接校园网验证地址失败
+            return 2  # 已连接其他网络
     else:
         try:
-            requests.get(baidu_url, timeout=0.5)
-        except requests.exceptions.Timeout:
-            return 3
+            requests.get(baidu_url, timeout=0.5)  # 在已连接校园网情况下，尝试连接百度
+        except requests.exceptions.RequestException:
+            return 3  # 连接了校园网，但未登入
         else:
-            return 4
+            return 4  # 连接了校园网，已登入

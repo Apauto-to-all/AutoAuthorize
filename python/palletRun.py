@@ -26,7 +26,7 @@ class Worker(QThread):
 # 在桌面右下角显示通知
 def show_message(title, text):
     icon = QIcon()
-    icon.addFile(u":/image/image/k1.ico")
+    icon.addFile(":/image/image/k1.ico")
     tray = QSystemTrayIcon(icon)  # 使用你的图标文件
     tray.show()
     tray.showMessage(title, text, QSystemTrayIcon.Information)
@@ -74,7 +74,9 @@ class TrayIcon(QtWidgets.QWidget):
             except Exception:
                 pass
 
-        self.timer.timeout.connect(self.start_worker)  # 连接定时器的timeout信号到更新函数
+        self.timer.timeout.connect(
+            self.start_worker
+        )  # 连接定时器的timeout信号到更新函数
         self.worker = Worker(is_link_wifi)
         self.timer.start(int(path.wait_time * 60) * 1000)  # 1000毫秒（1秒）
 
@@ -82,7 +84,7 @@ class TrayIcon(QtWidgets.QWidget):
         # 创建系统托盘图标
         self.trayIcon = QtWidgets.QSystemTrayIcon()
         icon = QtGui.QIcon()
-        icon.addFile(u":/image/image/k1.ico")
+        icon.addFile(":/image/image/k1.ico")
         self.icon = icon
         self.trayIcon.setIcon(self.icon)
         self.trayIcon.show()
@@ -93,7 +95,9 @@ class TrayIcon(QtWidgets.QWidget):
 
         # 立即运行自动登入校园网功能
         self.link_now = QtWidgets.QAction()
-        self.link_now.triggered.connect(self.main_window.link_wifi_dialog)  # 连接到对应的函数
+        self.link_now.triggered.connect(
+            self.main_window.link_wifi_dialog
+        )  # 连接到对应的函数
         self.link_now.setToolTip("立即运行自动登入校园网功能")  # 悬浮文本
         self.trayMenu.addAction(self.link_now)
 
@@ -155,6 +159,4 @@ class TrayIcon(QtWidgets.QWidget):
         mum = f"已经监测校园网：{path.monitor_num}次\n重新连接校园网：{path.run_mun}次"
 
         text = f"{run_time}\n{wait_log}\n{mum}"
-        QMessageBox.information(self.main_window, '监测信息',
-                                text,
-                                QMessageBox.Ok)
+        QMessageBox.information(self.main_window, "监测信息", text, QMessageBox.Ok)

@@ -6,22 +6,32 @@ import re
 
 import requests
 
-from path import path_header, path_settings, path_account, path_private, path_stats, \
-    github_url, dr_url, lzy_password, lzy_url, baidu_url
+from path import (
+    path_header,
+    path_settings,
+    path_account,
+    path_private,
+    path_stats,
+    github_url,
+    dr_url,
+    lzy_password,
+    lzy_url,
+    baidu_url,
+)
 
 
 def open_lzy():  # 打开蓝奏云网盘
-    command = 'echo ' + lzy_password.strip() + '|clip'
+    command = "echo " + lzy_password.strip() + "|clip"
     os.system(command)
-    os.system(f'start {lzy_url}')
+    os.system(f"start {lzy_url}")
 
 
 def link_github():  # 打开github地址
-    os.system(f'start {github_url}')
+    os.system(f"start {github_url}")
 
 
 def link_dr():  # 打开校园网验证地址
-    os.system(f'start {dr_url}')
+    os.system(f"start {dr_url}")
 
 
 def get_nc():  # 获取账号key（昵称）
@@ -38,14 +48,16 @@ def get_post_url():  # 获取post地址
         ip4 = ip4_n.group(1)
     else:
         ip4 = ip4_y.group(1)
-    return (f"http://172.16.2.100:801/eportal/?c=ACSetting&a=Login&protocol=http:&hostname=172.16.2.100&iTermType=1"
-            f"&wlanuserip={ip4}&wlanacip=null&wlanacname=null&mac=00-00-00-00-00-00&ip={ip4}&enAdvert=0"
-            f"&queryACIP=0&loginMethod=1")
+    return (
+        f"http://172.16.2.100:801/eportal/?c=ACSetting&a=Login&protocol=http:&hostname=172.16.2.100&iTermType=1"
+        f"&wlanuserip={ip4}&wlanacip=null&wlanacname=null&mac=00-00-00-00-00-00&ip={ip4}&enAdvert=0"
+        f"&queryACIP=0&loginMethod=1"
+    )
 
 
 def get_post_data():  # 获取post数据
     nc = get_nc()
-    with open(path_account, 'r') as f_account:
+    with open(path_account, "r") as f_account:
         account = json.load(f_account)
     username = account[nc][0]
     password = account[nc][1]
@@ -66,14 +78,14 @@ def get_post_data():  # 获取post数据
         "password": "",
         "user": "",
         "cmd": "",
-        "Login": ""
+        "Login": "",
     }
     return post_data
 
 
 def get_post_data_free():  # 获取post数据，用于图书馆免费网络登入
     nc = get_nc()
-    with open(path_account, 'r') as f_account:
+    with open(path_account, "r") as f_account:
         account = json.load(f_account)
     username = account[nc][0]
     password = account[nc][1]
@@ -93,7 +105,7 @@ def get_post_data_free():  # 获取post数据，用于图书馆免费网络登�
         "password": "",
         "user": "",
         "cmd": "",
-        "Login": ""
+        "Login": "",
     }  # 用于图书馆免费网络登入
     print()
     return post_data_free
@@ -106,14 +118,14 @@ def get_post_header():  # 获取header
 
 
 def get_operator_last(operator):
-    if operator == '中国移动':
-        kk = '@cmcc'
-    elif operator == '中国电信':
-        kk = '@telecom'
-    elif operator == '中国联通':
-        kk = '@unicom'
+    if operator == "中国移动":
+        kk = "@cmcc"
+    elif operator == "中国电信":
+        kk = "@telecom"
+    elif operator == "中国联通":
+        kk = "@unicom"
     else:
-        kk = '没有选择运营商'
+        kk = "没有选择运营商"
     return kk
 
 
@@ -121,16 +133,16 @@ def get_operator_last(operator):
 def save_post_data_header():
     post_header = {  # 拿来的
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 "
-                      "Safari/537.36"
+        "Safari/537.36"
     }
-    with open(path_header, 'w') as f_h:
+    with open(path_header, "w") as f_h:
         json.dump(post_header, f_h)
 
 
 def save_account(nc, username, password, operator):  # 保存账号密码
     if nc == "":
         nc = username
-    with open(path_account, 'w') as f_account:
+    with open(path_account, "w") as f_account:
         json.dump({nc: [username, password, operator]}, f_account)
     save_post_data_header()
 
@@ -138,10 +150,12 @@ def save_account(nc, username, password, operator):  # 保存账号密码
 def link_wifi():  # 登入校园网
     settings = configparser.ConfigParser()
     settings.read(path_settings)
-    if settings['settings']['wifi_free'] == '1':
-        requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+    if settings["settings"]["wifi_free"] == "1":
+        requests.post(
+            get_post_url(), data=get_post_data_free(), headers=get_post_header()
+        )
 
-    elif settings['settings']['wifi_stu'] == '1':
+    elif settings["settings"]["wifi_stu"] == "1":
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
     else:
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
@@ -149,30 +163,36 @@ def link_wifi():  # 登入校园网
             try:
                 logout()
             except Exception:
-                requests.post(get_post_url(), data=get_post_data_free(), headers=get_post_header())
+                requests.post(
+                    get_post_url(), data=get_post_data_free(), headers=get_post_header()
+                )
 
     with open(path_stats) as f:
         stats_f = json.load(f)
-    stats_f['stats_times'] += 1
-    with open(path_stats, 'w') as f:
+    stats_f["stats_times"] += 1
+    with open(path_stats, "w") as f:
         json.dump(stats_f, f)
 
 
 def logout():  # 注销校园网账户
-    mac = re.findall("olmac='(.*?)'", requests.get('http://172.16.2.100/').text, re.S)[0]
-    url_out = f'http://172.16.2.100:801/eportal/?c=ACSetting&a=Logout&wlanuserip=null&wlanacip=null&wlanacname=null' \
-              f'&port=&hostname=172.16.2.100&iTermType=1&session=null&queryACIP=0&mac={mac}'
+    mac = re.findall("olmac='(.*?)'", requests.get("http://172.16.2.100/").text, re.S)[
+        0
+    ]
+    url_out = (
+        f"http://172.16.2.100:801/eportal/?c=ACSetting&a=Logout&wlanuserip=null&wlanacip=null&wlanacname=null"
+        f"&port=&hostname=172.16.2.100&iTermType=1&session=null&queryACIP=0&mac={mac}"
+    )
     post_data_out = {
-        'c': 'ACSetting',
-        'a': 'Logout',
-        'wlanuserip': 'null',
-        'wlanacname': 'null',
-        'port': '',
-        'hostname': '172.16.2.100',
-        'iTermType': '1',
-        'session': 'null',
-        'queryACIP': '0',
-        'mac': f'{mac}'
+        "c": "ACSetting",
+        "a": "Logout",
+        "wlanuserip": "null",
+        "wlanacname": "null",
+        "port": "",
+        "hostname": "172.16.2.100",
+        "iTermType": "1",
+        "session": "null",
+        "queryACIP": "0",
+        "mac": f"{mac}",
     }
     requests.post(url_out, data=post_data_out, headers=get_post_header())
 
@@ -194,7 +214,7 @@ def create_files():  # 第一次运行，创建文件
             "wait_time": 1,  # 等待时间
         }
         # 写入到文件
-        with open(path_settings, 'w') as config_file:
+        with open(path_settings, "w") as config_file:
             config.write(config_file)
     if not os.path.exists(path_stats):
         dat = {
@@ -204,7 +224,7 @@ def create_files():  # 第一次运行，创建文件
             "stats_days": 0,  # 统计使用天数
             "stats_times": 0,  # 统计使用次数
         }
-        with open(path_stats, 'w') as f:
+        with open(path_stats, "w") as f:
             json.dump(dat, f)
 
 
@@ -217,7 +237,7 @@ def change_settings(section, option, value):  # 快速修改设置的值
 
 
 def get_today():  # 获取当前时间
-    return datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    return datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def verify_wifi():  # 验证网络连接状态

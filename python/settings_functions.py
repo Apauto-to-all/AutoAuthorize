@@ -37,22 +37,22 @@ def del_regedit():
 # 创建桌面快捷方式
 def desktop():
     desk_path = winshell.desktop()
-    lnk_path = desk_path + '\\' + ink_name + '.lnk'
+    lnk_path = desk_path + "\\" + ink_name + ".lnk"
     winshell.CreateShortcut(lnk_path, path_program)
 
 
 def del_desktop():
     desk_path = winshell.desktop()
-    lnk_path = desk_path + '\\' + ink_name + '.lnk'
+    lnk_path = desk_path + "\\" + ink_name + ".lnk"
     os.remove(lnk_path)
 
 
 # 检查版本
 def check_version(version):
-    pattern = r'^v\d+\.\d+\.\d+$'
+    pattern = r"^v\d+\.\d+\.\d+$"
     if not re.match(pattern, version):
         return False
-    major, minor, patch = map(int, version[1:].split('.'))
+    major, minor, patch = map(int, version[1:].split("."))
     if major < 0 or minor < 0 or patch < 0:
         return False
     if major == 0 and minor == 0 and patch == 0:

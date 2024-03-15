@@ -8,7 +8,13 @@ import requests
 from PySide2.QtWidgets import QMessageBox
 
 from login import get_today, get_nc
-from path import path_announcement, path_stats, announcement_url, version_url, path_settings
+from path import (
+    path_announcement,
+    path_stats,
+    announcement_url,
+    version_url,
+    path_settings,
+)
 
 
 # 更新公告
@@ -21,7 +27,7 @@ def update_announcement():
         with open(path_stats) as f:
             stats_f = json.load(f)
         stats_f["announcement_day"] = get_today()
-        with open(path_stats, 'w') as f:
+        with open(path_stats, "w") as f:
             json.dump(stats_f, f)
     except Exception:
         update_announcement_fail()
@@ -30,26 +36,34 @@ def update_announcement():
 # 更新公告失败
 def update_announcement_fail():
     if not os.path.exists(path_announcement):
-        with open(path_announcement, 'w', encoding="utf-8") as f:
-            text = '\n\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+        with open(path_announcement, "w", encoding="utf-8") as f:
+            text = (
+                "\n\n"
+                + get_today()
+                + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            )
             f.write(text)
     else:
-        with open(path_announcement, 'a', encoding="utf-8") as f:
-            text = '\n\n' + get_today() + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+        with open(path_announcement, "a", encoding="utf-8") as f:
+            text = (
+                "\n\n"
+                + get_today()
+                + ":更新公告失败，请检查网络，检测无误后，请再次点击以下“立即更新公告”按钮重新更新公告"
+            )
             f.write(text)
 
 
 # 更新统计天数
 def update_now_stats_days():
-    today_obj = datetime.datetime.strptime(get_today(), '%Y-%m-%d %H:%M:%S')
+    today_obj = datetime.datetime.strptime(get_today(), "%Y-%m-%d %H:%M:%S")
     with open(path_stats) as f:
         stats_f = json.load(f)
-    begin_day = stats_f['begin_day']
-    begin_day_obj = datetime.datetime.strptime(begin_day, '%Y-%m-%d %H:%M:%S')
+    begin_day = stats_f["begin_day"]
+    begin_day_obj = datetime.datetime.strptime(begin_day, "%Y-%m-%d %H:%M:%S")
     days = (today_obj - begin_day_obj).days
     stats_f["now_day"] = get_today()
-    stats_f['stats_days'] = days
-    with open(path_stats, 'w') as f:
+    stats_f["stats_days"] = days
+    with open(path_stats, "w") as f:
         json.dump(stats_f, f)
 
 
@@ -74,44 +88,46 @@ def update_settings_ini(self):
         set_ini = configparser.ConfigParser()
         set_ini.read(path_settings)
 
-        self.ui.wait_time.setValue(float(set_ini['settings']['wait_time']))
-        path.wait_time = float(set_ini['settings']['wait_time'])
+        self.ui.wait_time.setValue(float(set_ini["settings"]["wait_time"]))
+        path.wait_time = float(set_ini["settings"]["wait_time"])
 
         if set_ini["login"]["save_account"] == "0":
             self.ui.dr_button.setEnabled(True)
-            self.ui.dr_yz_pushButton.setText('验证账户')
+            self.ui.dr_yz_pushButton.setText("验证账户")
             self.ui.change_account_pushButton.setEnabled(False)
             self.ui.dr_yz_pushButton.setEnabled(False)
         else:
             self.set_edit_readonly()
-            if set_ini['login']['verify_account'] == '0':
-                self.ui.dr_yz_pushButton.setText('验证账户')
+            if set_ini["login"]["verify_account"] == "0":
+                self.ui.dr_yz_pushButton.setText("验证账户")
                 self.ui.dr_yz_pushButton.setEnabled(True)
                 if not path.have_save_account:
-                    QMessageBox.warning(self, "提示", "账户未验证，请验证账户", QMessageBox.Ok)
+                    QMessageBox.warning(
+                        self, "提示", "账户未验证，请验证账户", QMessageBox.Ok
+                    )
             else:
                 self.ui.lineEdit_nc.setText(get_nc())
-                self.ui.dr_yz_pushButton.setText('已验证')
+                self.ui.dr_yz_pushButton.setText("已验证")
                 self.ui.dr_yz_pushButton.setEnabled(False)
             self.ui.dr_button.setEnabled(False)
             self.ui.change_account_pushButton.setEnabled(True)
-        if set_ini['login']['verify_account'] == '0':
+        if set_ini["login"]["verify_account"] == "0":
             self.ui.login_button.setEnabled(False)
         else:
             self.ui.login_button.setEnabled(True)
-        if set_ini['settings']['auto_start'] == '0':
+        if set_ini["settings"]["auto_start"] == "0":
             self.ui.auto_start.setChecked(False)
         else:
             self.ui.auto_start.setChecked(True)
-        if set_ini['settings']['wifi_auto'] == '1':
+        if set_ini["settings"]["wifi_auto"] == "1":
             self.ui.auto_box.setChecked(True)
             self.ui.stu_box.setEnabled(False)
             self.ui.free_box.setEnabled(False)
-        if set_ini['settings']['wifi_stu'] == '1':
+        if set_ini["settings"]["wifi_stu"] == "1":
             self.ui.stu_box.setChecked(True)
             self.ui.auto_box.setEnabled(False)
             self.ui.free_box.setEnabled(False)
-        if set_ini['settings']['wifi_free'] == '1':
+        if set_ini["settings"]["wifi_free"] == "1":
             self.ui.free_box.setChecked(True)
             self.ui.stu_box.setEnabled(False)
             self.ui.auto_box.setEnabled(False)

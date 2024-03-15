@@ -3,6 +3,7 @@ import datetime
 import json
 import os
 import re
+import subprocess
 
 import requests
 
@@ -147,25 +148,40 @@ def save_account(nc, username, password, operator):  # 保存账号密码
     save_post_data_header()
 
 
+# 检测当前连接的wifi名称
+def get_connected_wifi_name():
+    result = subprocess.check_output(["netsh", "wlan", "show", "interfaces"]).decode(
+        "gbk"
+    )  # 执行命令并获取输出
+    lines = result.split("\n")  # 将输出分割成行
+    for line in lines:  # 遍历每一行
+        if (
+            "SSID" in line and "BSSID" not in line
+        ):  # 如果这一行包含"SSID"但不包含"BSSID"
+            return line.split(":")[1].strip()  # 返回这一行的第二部分（即WiFi名称）
+    return None  # 如果没有找到WiFi名称，返回None
+
+
 def link_wifi():  # 登入校园网
     settings = configparser.ConfigParser()
     settings.read(path_settings)
     if settings["settings"]["wifi_free"] == "1":
-        requests.post(
-            get_post_url(), data=get_post_data_free(), headers=get_post_header()
-        )
+        if get_connected_wifi_name() == "EcjtuLib_Free":
+            requests.post(
+                get_post_url(), data=get_post_data_free(), headers=get_post_header()
+            )
 
     elif settings["settings"]["wifi_stu"] == "1":
         requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
     else:
-        requests.post(get_post_url(), data=get_post_data(), headers=get_post_header())
-        if verify_wifi() == 3:
-            try:
-                logout()
-            except Exception:
-                requests.post(
-                    get_post_url(), data=get_post_data_free(), headers=get_post_header()
-                )
+        if get_connected_wifi_name() == "EcjtuLib_Free":
+            requests.post(
+                get_post_url(), data=get_post_data_free(), headers=get_post_header()
+            )
+        else:
+            requests.post(
+                get_post_url(), data=get_post_data(), headers=get_post_header()
+            )
 
     with open(path_stats) as f:
         stats_f = json.load(f)

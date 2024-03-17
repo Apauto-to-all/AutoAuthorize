@@ -165,3 +165,7 @@ cython_debug/
 /python/ui.ui
 /python/qt_data.qrc
 /text.py
+/python/AutoIng.py
+/打包.py
+/更新版本号.py
+/k1.ico

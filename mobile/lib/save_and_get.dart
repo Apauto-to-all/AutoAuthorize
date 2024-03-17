@@ -20,36 +20,48 @@ Future<void> firstRun() async {
     String? wifiName = await info.getWifiName();
     if (wifiName == '"ECJTU-Stu"' || wifiName == '"EcjtuLib_Free"') {
       try {
+        // 检查是否同时连接了校园网和移动数据
         await http
-            .get(Uri.parse(baiduUrl))
+            .get(Uri.parse(drUrl))
             .timeout(const Duration(milliseconds: 500));
-        notificationHelper.showNotification(
-          title: '无需使用',
-          body: '你已经登入校园网，无需再次打开程序',
-        );
-        return;
-      } catch (e) {
-        await linkWifi(wifiName);
         try {
           await http
               .get(Uri.parse(baiduUrl))
               .timeout(const Duration(milliseconds: 500));
-          // 显示你已经登入校园网的消息
           notificationHelper.showNotification(
-            title: '已帮你自动登入校园网，退出程序中……',
-            body: '推荐打开横幅通知，该通知只显示6秒',
-          );
-          // 延迟6秒后退出程序
-          Future.delayed(const Duration(seconds: 1), () {
-            exit(0);
-          });
-        } catch (e) {
-          notificationHelper.showNotification(
-            title: '失败',
-            body: '请检查账号，密码，运营商是否正确',
+            title: '无需使用',
+            body: '已登入校园网，无需打开程序，看说明除外……',
           );
           return;
+        } catch (e) {
+          await linkWifi(wifiName); // 登入
+          try {
+            await http
+                .get(Uri.parse(baiduUrl))
+                .timeout(const Duration(milliseconds: 500));
+            // 显示已经登入校园网的消息
+            notificationHelper.showNotification(
+              title: '已帮你自动登入校园网，退出程序中……',
+              body: '推荐打开横幅通知，该通知只显示6秒',
+            );
+            // 延迟0.5秒后退出程序
+            Future.delayed(const Duration(milliseconds: 500), () {
+              exit(0);
+            });
+          } catch (e) {
+            notificationHelper.showNotification(
+              title: '失败',
+              body: '请检查账号，密码，运营商是否正确',
+            );
+            return;
+          }
         }
+      } catch (e) {
+        notificationHelper.showNotification(
+          title: '错误',
+          body: '在连接校园网时，请关闭移动数据，否则程序无法正常工作',
+        );
+        return;
       }
     }
   }
@@ -190,7 +202,7 @@ void showBottomMessage(BuildContext context, String message) {
 
   final snackBar = SnackBar(
     content: Text(message),
-    duration: const Duration(seconds: 3), // 信息将在2秒后自动隐藏
+    duration: const Duration(seconds: 3), // 信息将在3秒后自动隐藏
   );
 
   // 显示SnackBar

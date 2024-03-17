@@ -168,7 +168,6 @@ class _UiBody extends State<UiDesign> {
                     showBegin();
                   }
                 },
-
                 child: Text(
                   isLoginButtonText,
                   style: isLoginButtonText == '保存账户并验证'
@@ -205,8 +204,8 @@ class _UiBody extends State<UiDesign> {
         ),
       ),
       floatingActionButton: SizedBox(
-        width: 80, // 设置宽度
-        height: 80, // 设置高度
+        width: 60, // 设置宽度
+        height: 60, // 设置高度
         child: FloatingActionButton(
           onPressed: () async {
             // 按钮点击事件

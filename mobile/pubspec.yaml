@@ -1,7 +1,7 @@
-name: auto_authorize_mobile
-description: "lohin ECJTU WIFI"
+name: authorize
+description: "自动登入ECJTU校园网"
 publish_to: 'none'
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

@@ -69,9 +69,10 @@ Future<void> saveAndVerify(BuildContext context, String username,
   var wifiName = await getWifiName(context);
   if (wifiName == '"ECJTU-Stu"' || wifiName == '"EcjtuLib_Free"') {
     if (username.isEmpty || password.isEmpty || operator == null) {
-      showMessage(context, '账号，密码，运营商（如果你不使用ECJTU-Stu请随意填）不能为空');
+      showMessage(context, '学号，密码，运营商（如果不使用ECJTU-Stu请随意填）不能为空');
       return;
     } else {
+      showBottomMessage(context, '正在验证，请稍安勿躁……勿重复点击');
       // 检查是否同时连接了校园网和移动数据
       try {
         await http
@@ -87,12 +88,12 @@ Future<void> saveAndVerify(BuildContext context, String username,
           await http
               .get(Uri.parse(baiduUrl))
               .timeout(const Duration(milliseconds: 500));
-          showMessage(context, '验证成功，你的账号已经保存');
+          showMessage(context, '验证成功，你的信息已经保存');
           await verifyAccount(); // 已通过验证
           showBottomMessage(context, '你已经登入校园网');
           return;
         } catch (e) {
-          showMessage(context, '验证失败，请检查账号密码或运营商是否正确');
+          showMessage(context, '验证失败，请检查学号，密码或运营商是否正确');
           return;
         }
       } catch (e) {
@@ -145,7 +146,7 @@ Future<void> linkWifiNow(BuildContext context) async {
             showBottomMessage(context, '成功，已经登入校园网');
             return;
           } catch (e) {
-            showBottomMessage(context, '失败，请检查账号密码或运营商是否正确');
+            showBottomMessage(context, '失败，请检查学号，密码或运营商是否正确');
             return;
           }
         }

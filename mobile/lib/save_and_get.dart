@@ -51,7 +51,7 @@ Future<void> firstRun() async {
           } catch (e) {
             notificationHelper.showNotification(
               title: '失败',
-              body: '请检查账号，密码，运营商是否正确',
+              body: '请检查学号，密码，运营商是否正确',
             );
             return;
           }

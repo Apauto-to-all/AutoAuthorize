@@ -38,5 +38,5 @@ version_url = "https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/mai
 
 path_program = sys.executable  # 程序路径
 
-lzy_url = "https://www.lanzoub.com/b052h91gb"  # 蓝奏云地址
+lzy_url = "https://www.lanzoub.com/b052h91gb?pass=ecjt"  # 蓝奏云地址
 lzy_password = "ecjt"  # 蓝奏云密码

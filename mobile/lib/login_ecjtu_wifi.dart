@@ -32,11 +32,8 @@ Future<String> getLoginUrl() async {
   }
 }
 
-Future<void> logout() async {
+Future<void> logout(final response) async {
   try {
-    final response = await http
-        .get(Uri.parse(drUrl))
-        .timeout(const Duration(milliseconds: 500));
     final html = response.body;
     final macMatch = RegExp("olmac='(.*?)'", dotAll: true).firstMatch(html);
     String? mac;
@@ -75,13 +72,13 @@ Future<void> saveAndVerify(BuildContext context, String username,
       showBottomMessage(context, '正在验证，请稍安勿躁……勿重复点击');
       // 检查是否同时连接了校园网和移动数据
       try {
-        await http
+        final response = await http
             .get(Uri.parse(drUrl))
             .timeout(const Duration(milliseconds: 500));
         // 先保存账户数据，等下测试登入时要用到
         await saveData(username, password, operator);
         // 管他三七二十一，先登出校园网
-        await logout();
+        await logout(response);
         // 连接了校园网，但未登入
         await linkWifi(wifiName); // 登入
         try {
@@ -110,9 +107,10 @@ Future<void> saveAndVerify(BuildContext context, String username,
 // 连接校园网，主功能
 Future<void> linkWifi(String? wifiName) async {
   if (wifiName == '"ECJTU-Stu"') {
-    Map<String, String> postData = await getPostData();
-    String loginUrl = await getLoginUrl();
-    await http.post(Uri.parse(loginUrl), body: postData);
+    await linkText(); // 需要删除，仅用于测试
+    // Map<String, String> postData = await getPostData();
+    // String loginUrl = await getLoginUrl();
+    // await http.post(Uri.parse(loginUrl), body: postData);
   } else if (wifiName == '"EcjtuLib_Free"') {
     Map<String, String> postFreeData = await getPostFreeData();
     String loginUrl = await getLoginUrl();
@@ -151,13 +149,13 @@ Future<void> linkWifiNow(BuildContext context) async {
           }
         }
       } catch (e) {
-        showMessage(context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试');
+        showBottomMessage(context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试');
       }
     } else {
-      showMessage(context, '请连接校园网');
+      showBottomMessage(context, '请连接校园网');
     }
   } else {
-    showMessage(context, '请先保存账户并验证');
+    showBottomMessage(context, '请先保存账户并验证');
   }
 }
 
@@ -166,6 +164,7 @@ Future<void> linkText() async {
   Map<String, String> postFreeData = await getPostFreeData();
   String loginUrl = await getLoginUrl();
   await http.post(Uri.parse(loginUrl), body: postFreeData);
+  return;
 }
 
 Future<void> text(BuildContext context) async {

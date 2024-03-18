@@ -27,7 +27,7 @@ Future<void> firstRun() async {
         try {
           await http
               .get(Uri.parse(baiduUrl))
-              .timeout(const Duration(milliseconds: 500));
+              .timeout(const Duration(milliseconds: 1000));
           notificationHelper.showNotification(
             title: '无需使用',
             body: '已登入校园网，无需打开程序，看说明除外……',
@@ -41,11 +41,11 @@ Future<void> firstRun() async {
                 .timeout(const Duration(milliseconds: 500));
             // 显示已经登入校园网的消息
             notificationHelper.showNotification(
-              title: '已帮你自动登入校园网，退出程序中……',
-              body: '推荐打开横幅通知，该通知只显示6秒',
+              title: '自动登入',
+              body: '已帮你自动登入校园网，退出程序中……',
             );
-            // 延迟0.5秒后退出程序
-            Future.delayed(const Duration(milliseconds: 500), () {
+            // 延迟0秒后退出程序
+            Future.delayed(const Duration(milliseconds: 100), () {
               exit(0);
             });
           } catch (e) {
@@ -59,7 +59,7 @@ Future<void> firstRun() async {
       } catch (e) {
         notificationHelper.showNotification(
           title: '错误',
-          body: '在连接校园网时，请关闭移动数据，否则程序无法正常工作',
+          body: '在连接校园网时，请先关闭移动数据后，再运行',
         );
         return;
       }
@@ -97,7 +97,7 @@ String changeOperatorLast(String operator) {
   } else if (operator == "中国联通") {
     return "@unicom";
   } else {
-    return "没有选择运营商";
+    return "-1";
   }
 }
 
@@ -191,8 +191,8 @@ Future<String?> getWifiName(BuildContext context) async {
   return wifiName;
 }
 
+// 显示底部消息
 DateTime? lastPressTime;
-
 void showBottomMessage(BuildContext context, String message) {
   final now = DateTime.now();
   if (lastPressTime != null && now.difference(lastPressTime!).inSeconds < 1) {

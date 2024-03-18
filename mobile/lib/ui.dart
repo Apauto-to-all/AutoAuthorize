@@ -2,40 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_ecjtu_wifi.dart';
 import 'save_and_get.dart';
+import 'readMe.dart';
 
 class UiDesign extends StatefulWidget {
   const UiDesign({super.key});
 
   @override
-  State<UiDesign> createState() {
-    return _UiBody();
-  }
+  State<UiDesign> createState() => _UiBody();
 }
 
 const textColor = Color.fromRGBO(73, 90, 128, 1);
 const textBackgroundColor = Color.fromRGBO(248, 239, 230, 0.8);
 const textFont = 'KaiTi'; // 设置字体
 
-class _UiBody extends State<UiDesign> {
+class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   TextEditingController username = TextEditingController(); // 学号输入框控制器
   TextEditingController password = TextEditingController(); // 密码输入框控制器
   String? operator; // 运营商
   String? choiceWifi; // 选择的WiFi
   String isLoginButtonText = '保存账户并验证'; // 是否登入
+  String? verifyAccount; // 是否通过验证
 
   @override
   void initState() {
     super.initState();
     showBegin();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (verifyAccount == null) {
+      getVerifyAccount();
+    }
+    if (state == AppLifecycleState.resumed && verifyAccount == '1') {
+      // 应用从后台切换到前台，立即连接校园网
+      linkWifiNow(context);
+    }
+  }
+
+  Future<void> getVerifyAccount() async {
+    verifyAccount = await storage.read(key: 'verifyAccount');
   }
 
   Future<void> showBegin() async {
-    String? value = await storage.read(key: 'verifyAccount');
-    if (value == '1') {
-      setState(() async {
-        username.text = await storage.read(key: 'username') ?? '';
-        password.text = await storage.read(key: 'password') ?? '';
-        operator = await storage.read(key: 'operator');
+    await getVerifyAccount();
+    if (verifyAccount == '1') {
+      String? usernameText = await storage.read(key: 'username');
+      String? passwordText = await storage.read(key: 'password');
+      String? operatorText = await storage.read(key: 'operator');
+
+      setState(() {
+        username.text = usernameText ?? '';
+        password.text = passwordText ?? '';
+        operator = operatorText;
         isLoginButtonText = '修改账户';
       });
     } else {
@@ -120,7 +147,7 @@ class _UiBody extends State<UiDesign> {
                       },
                       // 传入数组
                       items:
-                          <String>['中国电信', '中国联通', '中国移动'].map((String value) {
+                          <String>['中国移动', '中国电信', '中国联通'].map((String value) {
                         return DropdownMenuItem(
                             value: value, child: Text(value));
                       }).toList(),
@@ -187,7 +214,7 @@ class _UiBody extends State<UiDesign> {
               TextButton(
                 onPressed: () async {
                   // 按钮点击事件
-                  await text(context);
+                  showReadMe(context); // 显示底部消息
                 },
                 child: const Text(
                   '说明',
@@ -204,8 +231,8 @@ class _UiBody extends State<UiDesign> {
         ),
       ),
       floatingActionButton: SizedBox(
-        width: 60, // 设置宽度
-        height: 60, // 设置高度
+        width: 80, // 设置宽度
+        height: 80, // 设置高度
         child: FloatingActionButton(
           onPressed: () async {
             // 按钮点击事件

@@ -150,23 +150,32 @@ Future<Map<String, String>> getPostFreeData() async {
 
 // 显示消息
 void showMessage(BuildContext context, String message, {String title = "提示"}) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('确定'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
+  try {
+    // 获取可以用于 showDialog 的 NavigatorState
+    NavigatorState? navigatorState = Navigator.of(context, rootNavigator: true);
+    showDialog(
+      context: navigatorState.context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('确定'),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    notificationHelper.showNotification(
+      title: '消息未能正常显示，内容如下：',
+      body: message,
+    );
+  }
 }
 
 // 获取位置信息以获取wifi名称

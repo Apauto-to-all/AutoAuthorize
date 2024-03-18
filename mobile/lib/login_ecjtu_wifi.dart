@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'save_and_get.dart';
-import 'notice.dart';
 
 const baiduUrl = 'https://www.baidu.com/';
 const drUrl = 'http://172.16.2.100/';

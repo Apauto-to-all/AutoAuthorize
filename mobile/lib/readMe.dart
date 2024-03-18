@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'notice.dart';
 import 'save_and_get.dart';
 import 'ui.dart';
+import 'package:http/http.dart' as http;
+import 'package:package_info/package_info.dart';
+import 'package:network_info_plus/network_info_plus.dart'; // 导入network_info_plus库
+import 'package:permission_handler/permission_handler.dart'; // 导入permission_handler库
+import 'package:flutter/material.dart'; // 导入material库
 
 // 重要的事情说三遍
 const importantText = '''
@@ -35,6 +41,7 @@ const readMe = '''
 （2）不同用户的不同网络情况，我们还没能完全覆盖到，可能会出现一些错误提示信息，如果你遇到了，请重新尝试，如果影响比较严重，可以联系我。
 （3）如果你需要使用校园网，请务必先关闭移动数据，然后打开WiFi，选择校园网进行连接，最后打开本程序进行自动登入，如果你没关闭移动数据，程序“很有可能”无法帮你登入校园网。
 （4）不要关闭本程序的通知权限，本程序的通知只显示6秒，到期自动清除，不会打扰到你，会帮你及时了解到程序的运行情况。（除了第5条的功能3，程序帮你登入校园网后，直接退出，来不及帮你自动清除通知，需要你手动在状态栏清除通知）
+（5）由于获取最新版本号需要访问github，国内访问github比较慢，在检查更新时，请耐心等待。（之前用过github镜像网站，速度虽然快，但之后访问失效）
 
 ''';
 
@@ -78,6 +85,7 @@ class UiReadMe extends StatefulWidget {
 
 class UiReadMeState extends State<UiReadMe> {
   bool _isExpanded = false; // 是否展开，用于显示具体使用步骤
+  bool isChecking = false; // 是否正在检查更新
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +153,65 @@ class UiReadMeState extends State<UiReadMe> {
             color: textColor,
             height: 1,
           ),
+          ElevatedButton(
+            onPressed: () async {
+              if (isChecking) {
+                // 如果正在检查更新，那么不执行任何操作
+                return;
+              }
+
+              isChecking = true;
+              // 显示模态进度指示器
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return const Dialog(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
+              notificationHelper.showNotification(
+                title: '检查更新中……',
+                body: '需要访问github检查更新，请稍安勿躁……',
+              );
+              // 获取当前应用的版本号，正在检查更新，请稍安勿躁……
+              PackageInfo packageInfo = await PackageInfo.fromPlatform();
+              String currentVersion = 'v${packageInfo.version}';
+
+              // 获取网页的内容
+              try {
+                final response = await http
+                    .get(Uri.parse(
+                        'https://raw.githubusercontent.com/Apauto-to-all/AutoAuthorize/main/version.txt'))
+                    .timeout(const Duration(seconds: 6));
+                String serverVersion = response.body.trim();
+                // 比较版本号
+                if (currentVersion == serverVersion) {
+                  showMessage(context, "v$currentVersion当前已是最新版本");
+                } else {
+                  showMessage(context,
+                      "“$currentVersion ==> $serverVersion”版本有变，请前往github或蓝奏云网盘下载最新版本");
+                }
+              } catch (e) {
+                showMessage(context, '检查更新失败，请检查网络连接');
+                return;
+              } finally {
+                // 在更新检查结束后关闭模态进度指示器
+                Navigator.of(context, rootNavigator: true).pop();
+
+                isChecking = false;
+              }
+            },
+            child: const Text(
+              '检查更新',
+              style: TextStyle(fontSize: 25),
+            ),
+          ),
+          const Divider(
+            color: textColor,
+            height: 1,
+          ),
           ListTile(
             title: const Text(
               '打开github项目地址',
@@ -189,7 +256,7 @@ class UiReadMeState extends State<UiReadMe> {
             ),
           ),
           Image.asset(
-            "images/ds.png",
+            "images/ds.jpg",
             fit: BoxFit.fill,
           ),
           const Text(

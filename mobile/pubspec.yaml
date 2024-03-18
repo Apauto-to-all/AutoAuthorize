@@ -1,7 +1,7 @@
 name: authorize
 description: "自动登入ECJTU校园网"
 publish_to: 'none'
-version: 1.0.0
+version: 2.2.4
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -9,20 +9,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # 本地通知
-  flutter_local_notifications: ^17.0.0
-  # 闪屏页
-  # flutter_native_splash: ^2.4.0
-  # 本地存储
-  flutter_secure_storage: ^9.0.0
-  # 网络请求
-  http: ^1.2.1
-  # 网络状态
-  network_info_plus: ^4.1.0+1
-  # 权限
-  permission_handler: ^11.3.0
-  # 打开浏览器
-  url_launcher: ^6.2.5
+  
+  flutter_local_notifications: ^17.0.0 # 本地通知
+
+  # flutter_native_splash: ^2.4.0 # 闪屏页
+
+  flutter_secure_storage: ^9.0.0 # 本地存储
+
+  http: ^1.2.1 # 网络请求
+
+  network_info_plus: ^4.1.0+1 # 网络状态
+
+  package_info: ^2.0.2 # 包信息
+
+  permission_handler: ^11.3.0 # 权限
+
+  url_launcher: ^6.2.5 # 打开浏览器
+  
 
 dev_dependencies:
   flutter_test:

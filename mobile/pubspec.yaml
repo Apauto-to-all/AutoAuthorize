@@ -9,12 +9,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # 本地通知
   flutter_local_notifications: ^17.0.0
+  # 闪屏页
+  # flutter_native_splash: ^2.4.0
+  # 本地存储
   flutter_secure_storage: ^9.0.0
+  # 网络请求
   http: ^1.2.1
-  lottie: ^3.1.0
+  # 网络状态
   network_info_plus: ^4.1.0+1
+  # 权限
   permission_handler: ^11.3.0
+  # 打开浏览器
   url_launcher: ^6.2.5
 
 dev_dependencies:
@@ -29,5 +36,12 @@ flutter:
   fonts:
     - family: KaiTi
       fonts:
-        - asset: fonts\YanZhenQingDuoBaoTaBei.ttf
+        - asset: fonts/YanZhenQingDuoBaoTaBei.woff
     
+# flutter_native_splash:
+#   image: images/3.jpg  # 闪屏页的图片路径
+#   color: "e4e4e4"  # 闪屏页的背景颜色
+#   android: true  # 是否为 Android 平台生成闪屏页
+#   ios: false  # 是否为 iOS 平台生成闪屏页
+#   web: false  # 是否为 Web 平台生成闪屏页
+#   android_gravity: "center"  # Android 平台上图片的位置

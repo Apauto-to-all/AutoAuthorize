@@ -166,10 +166,3 @@ Future<void> linkText() async {
   await http.post(Uri.parse(loginUrl), body: postFreeData);
   return;
 }
-
-Future<void> text(BuildContext context) async {
-  notificationHelper.showNotification(
-    title: 'Hello',
-    body: 'This is a notification!',
-  );
-}

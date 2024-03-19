@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http; // 导入http库
 import 'login_ecjtu_wifi.dart';
 import 'notice.dart'; // 通知库
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // 安全储存数据
-import 'dart:io';
 
 // 创建存储
 const storage = FlutterSecureStorage();
@@ -15,6 +14,7 @@ Future<void> firstRun() async {
   String? value = await storage.read(key: 'verifyAccount');
   if (value == null) {
     await initializeData();
+    return;
   } else if (value == "1") {
     final info = NetworkInfo();
     String? wifiName = await info.getWifiName();
@@ -42,12 +42,9 @@ Future<void> firstRun() async {
             // 显示已经登入校园网的消息
             notificationHelper.showNotification(
               title: '自动登入',
-              body: '已帮你自动登入校园网，退出程序中……',
+              body: '已帮你自动登入校园网，请手动退出程序',
             );
-            // 延迟0秒后退出程序
-            Future.delayed(const Duration(milliseconds: 100), () {
-              exit(0);
-            });
+            return;
           } catch (e) {
             notificationHelper.showNotification(
               title: '失败',
@@ -86,7 +83,6 @@ Future<void> initializeData() async {
   await storage.write(key: 'password', value: "");
   await storage.write(key: 'operator', value: "");
   await storage.write(key: 'operatorLast', value: "");
-  await storage.write(key: 'verifyAccount', value: '0');
 }
 
 String changeOperatorLast(String operator) {

@@ -158,7 +158,7 @@ Future<void> linkWifiNow(BuildContext context) async {
   }
 }
 
-// 登入校园网测试
+// 登入校园网测试，仅用于测试，需要删除
 Future<void> linkText() async {
   Map<String, String> postFreeData = await getPostFreeData();
   String loginUrl = await getLoginUrl();

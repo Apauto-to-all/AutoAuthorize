@@ -45,9 +45,11 @@ class NotificationHelper {
       'your.channel.id',
       'your channel name',
       channelDescription: 'your channel description',
-      importance: Importance.max,
-      priority: Priority.high,
+      // importance: Importance.max,
+      // priority: Priority.high,
       ticker: 'ticker',
+      playSound: false, // 不播放声音
+      styleInformation: BigTextStyleInformation(''), // 使用大文本样式
     );
 
     // ios的通知
@@ -68,7 +70,7 @@ class NotificationHelper {
       platformChannelSpecifics,
     );
     // 设置一个延迟，然后在延迟结束后取消通知
-    Future.delayed(const Duration(seconds: 6), () async {
+    Future.delayed(const Duration(seconds: 8), () async {
       await _notificationsPlugin.cancel(1);
     });
   }

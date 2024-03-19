@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_ecjtu_wifi.dart';
+import 'notice.dart';
 import 'save_and_get.dart';
 import 'readMe.dart';
+import 'dart:async';
 
 class UiDesign extends StatefulWidget {
   const UiDesign({super.key});
@@ -39,10 +41,15 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (verifyAccount == null) {
-      getVerifyAccount();
-    }
-    if (state == AppLifecycleState.resumed && verifyAccount == '1') {
+
+    if (state == AppLifecycleState.paused && verifyAccount == '1') {
+      // 应用进入后台
+      // linkWifiNow(context);
+      // notificationHelper.showNotification(
+      //   title: '后台运行中',
+      //   body: '后台监测校园网中，每1分钟监测一次',
+      // );
+    } else if (state == AppLifecycleState.resumed && verifyAccount == '1') {
       // 应用从后台切换到前台，立即连接校园网
       linkWifiNow(context);
     }
@@ -53,6 +60,15 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   }
 
   Future<void> showBegin() async {
+    String? value = await storage.read(key: 'verifyAccount');
+    if (value == null) {
+      notificationHelper.showNotification(
+        title: '欢迎使用自动登入校园网',
+        body: '首次使用，请先阅读"说明"',
+      );
+      await storage.write(key: 'verifyAccount', value: '0');
+    }
+
     await getVerifyAccount();
     if (verifyAccount == '1') {
       String? usernameText = await storage.read(key: 'username');
@@ -214,7 +230,7 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
               TextButton(
                 onPressed: () async {
                   // 按钮点击事件
-                  showReadMe(context); // 显示底部消息
+                  showReadMe(context); // 显示说明消息
                 },
                 child: const Text(
                   '说明',

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
-import 'notice.dart';
 import 'save_and_get.dart';
 import 'ui.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
-import 'package:network_info_plus/network_info_plus.dart'; // 导入network_info_plus库
-import 'package:permission_handler/permission_handler.dart'; // 导入permission_handler库
-import 'package:flutter/material.dart'; // 导入material库
 
 // 重要的事情说三遍
 const importantText = '''
@@ -34,13 +30,13 @@ const readMe = '''
 5.通过验证后，解锁以下功能：
 （1）可以点击右下角的按钮，帮你登入校园网。
 （2）如果本程序运行在后台，在需要登入校园网时，直接切换过来，就能自动为你登入校园网。（参考了另一位同学开发的登入校园网程序）
-（3）如果你连接了校园网，并重新打开我们的程序，在未登入情况下，程序会自动帮你登入校园网，然后自动退出程序，并利用通知告诉你登入情况。（全自动！不过还是需要你在连接校园网后，再运行本程序，目前没实现：检测到你连接校园网wifi，就帮你自动帮你登入。我感觉……用处不大，之后就看你们的反馈吧，毕竟电脑版的已经实现了后台监测功能）
+（3）如果你连接了校园网，并重新打开我们的程序，在未登入情况下，程序会自动帮你登入校园网，并利用通知告诉你登入情况。（不过还是需要你在连接校园网后，再运行本程序，目前没实现：检测到你连接校园网wifi，就帮你自动帮你登入。之后就看你们的反馈吧，毕竟电脑版的已经实现了后台监测功能）
 
 6.注意：
 （1）如果你需要更换学号，密码或运营商，请点击“修改账户”按钮，否则，我们会一直使用你之前通过验证时保存的账户信息。
 （2）不同用户的不同网络情况，我们还没能完全覆盖到，可能会出现一些错误提示信息，如果你遇到了，请重新尝试，如果影响比较严重，可以联系我。
 （3）如果你需要使用校园网，请务必先关闭移动数据，然后打开WiFi，选择校园网进行连接，最后打开本程序进行自动登入，如果你没关闭移动数据，程序“很有可能”无法帮你登入校园网。
-（4）不要关闭本程序的通知权限，本程序的通知只显示6秒，到期自动清除，不会打扰到你，会帮你及时了解到程序的运行情况。（除了第5条的功能3，程序帮你登入校园网后，直接退出，来不及帮你自动清除通知，需要你手动在状态栏清除通知）
+（4）不要关闭本程序的通知权限，本程序的通知只显示8秒，到期自动清除，不会打扰到你，会帮你及时了解到程序的运行情况。（除了第5条的功能3，程序帮你登入校园网后，直接退出，来不及帮你自动清除通知，需要你手动在状态栏清除通知）
 （5）由于获取最新版本号需要访问github，国内访问github比较慢，在检查更新时，请耐心等待。（之前用过github镜像网站，速度虽然快，但之后访问失效）
 
 ''';
@@ -159,22 +155,7 @@ class UiReadMeState extends State<UiReadMe> {
                 // 如果正在检查更新，那么不执行任何操作
                 return;
               }
-
               isChecking = true;
-              // 显示模态进度指示器
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return const Dialog(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              );
-              notificationHelper.showNotification(
-                title: '检查更新中……',
-                body: '需要访问github检查更新，请稍安勿躁……',
-              );
               // 获取当前应用的版本号，正在检查更新，请稍安勿躁……
               PackageInfo packageInfo = await PackageInfo.fromPlatform();
               String currentVersion = 'v${packageInfo.version}';
@@ -188,18 +169,15 @@ class UiReadMeState extends State<UiReadMe> {
                 String serverVersion = response.body.trim();
                 // 比较版本号
                 if (currentVersion == serverVersion) {
-                  showMessage(context, "v$currentVersion当前已是最新版本");
+                  showMessage(context, "$currentVersion当前已是最新版本");
                 } else {
                   showMessage(context,
                       "“$currentVersion ==> $serverVersion”版本有变，请前往github或蓝奏云网盘下载最新版本");
                 }
               } catch (e) {
-                showMessage(context, '检查更新失败，请检查网络连接');
+                showMessage(context, '检查更新失败，请检查网络连接\n或重新尝试');
                 return;
               } finally {
-                // 在更新检查结束后关闭模态进度指示器
-                Navigator.of(context, rootNavigator: true).pop();
-
                 isChecking = false;
               }
             },

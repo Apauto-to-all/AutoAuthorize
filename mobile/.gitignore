@@ -53,5 +53,5 @@ app.*.map.json
 pubspec.lock
 analysis_options.yaml
 .metadata
-
+编译apk.py
 # flutter over

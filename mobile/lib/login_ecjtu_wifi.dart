@@ -106,10 +106,9 @@ Future<void> saveAndVerify(BuildContext context, String username,
 // 连接校园网，主功能
 Future<void> linkWifi(String? wifiName) async {
   if (wifiName == '"ECJTU-Stu"') {
-    await linkText(); // 需要删除，仅用于测试
-    // Map<String, String> postData = await getPostData();
-    // String loginUrl = await getLoginUrl();
-    // await http.post(Uri.parse(loginUrl), body: postData);
+    Map<String, String> postData = await getPostData();
+    String loginUrl = await getLoginUrl();
+    await http.post(Uri.parse(loginUrl), body: postData);
   } else if (wifiName == '"EcjtuLib_Free"') {
     Map<String, String> postFreeData = await getPostFreeData();
     String loginUrl = await getLoginUrl();
@@ -156,12 +155,4 @@ Future<void> linkWifiNow(BuildContext context) async {
   } else {
     showBottomMessage(context, '请先保存账户并验证');
   }
-}
-
-// 登入校园网测试，仅用于测试，需要删除
-Future<void> linkText() async {
-  Map<String, String> postFreeData = await getPostFreeData();
-  String loginUrl = await getLoginUrl();
-  await http.post(Uri.parse(loginUrl), body: postFreeData);
-  return;
 }

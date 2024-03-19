@@ -43,12 +43,13 @@ class NotificationHelper {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'your.channel.id',
-      'your channel name',
-      channelDescription: 'your channel description',
-        importance: Importance.low, // 设置为 low，这样通知就不会有声音
-      priority: Priority.low, // 设置为 low，这样通知就不会在锁屏上显示
+      '通知',
+      channelDescription: '通知',
+      importance: Importance.high,
+      priority: Priority.high,
       ticker: 'ticker',
       playSound: false, // 不播放声音
+      enableVibration: false, // 不震动
       styleInformation: BigTextStyleInformation(''), // 使用大文本样式
     );
 

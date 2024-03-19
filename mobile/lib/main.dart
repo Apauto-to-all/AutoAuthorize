@@ -21,7 +21,7 @@ void main() async {
   // 初始化Workmanager
   Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    isInDebugMode: false,
   );
   firstRun(); // 判断是否第一次运行
 

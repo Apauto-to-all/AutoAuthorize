@@ -69,16 +69,13 @@ void showReadMe(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: textBackgroundColor,
     builder: (context) {
-      return UiReadMe(
-        mainContext: context,
-      );
+      return const UiReadMe();
     },
   );
 }
 
 class UiReadMe extends StatefulWidget {
-  const UiReadMe({super.key, required this.mainContext});
-  final BuildContext mainContext;
+  const UiReadMe({super.key});
   @override
   UiReadMeState createState() => UiReadMeState();
 }

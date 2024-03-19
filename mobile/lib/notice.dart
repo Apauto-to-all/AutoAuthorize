@@ -45,8 +45,8 @@ class NotificationHelper {
       'your.channel.id',
       'your channel name',
       channelDescription: 'your channel description',
-      // importance: Importance.max,
-      // priority: Priority.high,
+        importance: Importance.low, // 设置为 low，这样通知就不会有声音
+      priority: Priority.low, // 设置为 low，这样通知就不会在锁屏上显示
       ticker: 'ticker',
       playSound: false, // 不播放声音
       styleInformation: BigTextStyleInformation(''), // 使用大文本样式

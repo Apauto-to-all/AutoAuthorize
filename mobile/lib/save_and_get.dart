@@ -2,6 +2,7 @@ import 'package:network_info_plus/network_info_plus.dart'; // 导入network_info
 import 'package:permission_handler/permission_handler.dart'; // 导入permission_handler库
 import 'package:flutter/material.dart'; // 导入material库
 import 'package:http/http.dart' as http; // 导入http库
+import 'package:workmanager/workmanager.dart';
 import 'login_ecjtu_wifi.dart';
 import 'notice.dart'; // 通知库
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // 安全储存数据
@@ -28,10 +29,6 @@ Future<void> firstRun() async {
           await http
               .get(Uri.parse(baiduUrl))
               .timeout(const Duration(milliseconds: 1000));
-          notificationHelper.showNotification(
-            title: '无需使用',
-            body: '已登入校园网，无需打开程序，看说明除外……',
-          );
           return;
         } catch (e) {
           await linkWifi(wifiName); // 登入
@@ -60,6 +57,61 @@ Future<void> firstRun() async {
         );
         return;
       }
+    }
+  }
+}
+
+// 后台运行监控校园网
+Future<void> backgroundRun() async {
+  String? value = await storage.read(key: 'verifyAccount');
+  if (value == "1") {
+    final info = NetworkInfo();
+    String? wifiName = await info.getWifiName();
+    if (wifiName == '"ECJTU-Stu"' || wifiName == '"EcjtuLib_Free"') {
+      try {
+        // 检查是否同时连接了校园网和移动数据
+        await http
+            .get(Uri.parse(drUrl))
+            .timeout(const Duration(milliseconds: 500));
+        try {
+          await http
+              .get(Uri.parse(baiduUrl))
+              .timeout(const Duration(milliseconds: 1000));
+          return;
+        } catch (e) {
+          await linkWifi(wifiName); // 登入
+          try {
+            await http
+                .get(Uri.parse(baiduUrl))
+                .timeout(const Duration(milliseconds: 500));
+            // 显示已经登入校园网的消息
+            notificationHelper.showNotification(
+              title: '自动登入',
+              body: '已帮你自动登入校园网，持续监测中……',
+            );
+            return;
+          } catch (e) {
+            notificationHelper.showNotification(
+              title: '登入失败',
+              body: '请检查学号，密码，运营商是否正确',
+            );
+            return;
+          }
+        }
+      } catch (e) {
+        notificationHelper.showNotification(
+          title: '错误',
+          body: '在连接校园网时，请先关闭移动数据后，再运行',
+        );
+        return;
+      }
+    } else {
+      notificationHelper.showNotification(
+        title: '检测到未连接校园网',
+        body: '后台监测功能已退出',
+      );
+      Workmanager().cancelAll(); // 取消后台任务
+      return;
     }
   }
 }

@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
 import 'ui.dart';
 import 'notice.dart';
 import 'save_and_get.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    // 这里是你的后台任务代码
+    backgroundRun(); // 后台运行，监测校园网
+    return Future.value(true);
+  });
+}
 
 void main() async {
   //用于确保Flutter的Widgets绑定已经初始化。
@@ -9,6 +18,11 @@ void main() async {
   // 初始化通知帮助类
   NotificationHelper notificationHelper = NotificationHelper();
   await notificationHelper.initialize();
+  // 初始化Workmanager
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
   firstRun(); // 判断是否第一次运行
 
   runApp(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:workmanager/workmanager.dart';
 import 'login_ecjtu_wifi.dart';
 import 'notice.dart';
 import 'save_and_get.dart';
@@ -24,10 +25,23 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   String? choiceWifi; // 选择的WiFi
   String isLoginButtonText = '保存账户并验证'; // 是否登入
   String? verifyAccount; // 是否通过验证
+  late FocusNode _focusNode; // 输入框焦点
+
+  void _onFocusChange() {
+    if (_focusNode.hasFocus) {
+      // 当前组件获得了焦点
+      // 在这里注册你的后台任务
+    } else {
+      // 当前组件失去了焦点
+      // 在这里取消你的后台任务
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
     showBegin();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -35,6 +49,8 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -44,14 +60,18 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.paused && verifyAccount == '1') {
       // 应用进入后台
-      // linkWifiNow(context);
-      // notificationHelper.showNotification(
-      //   title: '后台运行中',
-      //   body: '后台监测校园网中，每1分钟监测一次',
-      // );
-    } else if (state == AppLifecycleState.resumed && verifyAccount == '1') {
+      Workmanager().registerPeriodicTask(
+        "2",
+        "监测ECJTU校园网",
+        inputData: {'提示': '15分钟检测一次'},
+        frequency: const Duration(minutes: 15), // 这里设置任务的执行频率
+      );
+    } else if (state == AppLifecycleState.resumed) {
       // 应用从后台切换到前台，立即连接校园网
-      linkWifiNow(context);
+      Workmanager().cancelAll();
+      if (verifyAccount == '1') {
+        linkWifiNow(context);
+      }
     }
   }
 

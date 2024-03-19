@@ -532,7 +532,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(whatsthis)
         self.lzy_pushButton.setWhatsThis("")
 #endif // QT_CONFIG(whatsthis)
-        self.lzy_pushButton.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u84dd\u594f\u4e91\u7f51\u76d8\uff08\u63d0\u53d6\u7801\uff1aecjtu\uff09", None))
+        self.lzy_pushButton.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u84dd\u594f\u4e91\u7f51\u76d8\uff08\u63d0\u53d6\u7801\uff1aecjt\uff09", None))
         self.link_github.setText(QCoreApplication.translate("MainWindow", u"\u6253\u5f00\u5f00\u6e90\u5730\u5740", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "")
 #if QT_CONFIG(tooltip)

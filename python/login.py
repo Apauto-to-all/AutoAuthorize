@@ -134,7 +134,7 @@ def get_operator_last(operator):
 def save_post_data_header():
     post_header = {  # 拿来的
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 "
-                      "Safari/537.36"
+        "Safari/537.36"
     }
     with open(path_header, "w") as f_h:
         json.dump(post_header, f_h)
@@ -148,18 +148,24 @@ def save_account(nc, username, password, operator):  # 保存账号密码
     save_post_data_header()
 
 
-# 检测当前连接的wifi名称
+# 检测当前连接的wifi名称，拿来的
 def get_connected_wifi_name():
-    result = subprocess.check_output(["netsh", "wlan", "show", "interfaces"]).decode(
-        "gbk"
-    )  # 执行命令并获取输出
-    lines = result.split("\n")  # 将输出分割成行
-    for line in lines:  # 遍历每一行
-        if (
-                "SSID" in line and "BSSID" not in line
-        ):  # 如果这一行包含"SSID"但不包含"BSSID"
-            return line.split(":")[1].strip()  # 返回这一行的第二部分（即WiFi名称）
-    return None  # 如果没有找到WiFi名称，返回None
+    # 使用subprocess模块调用命令行命令获取当前连接的WiFi名称
+    process = subprocess.Popen(
+        ["netsh", "wlan", "show", "interfaces"],
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        creationflags=subprocess.CREATE_NO_WINDOW,
+    )
+    result, _ = process.communicate()
+    result = result.decode("gbk")
+    lines = result.split("\n")
+    for line in lines:
+        # 查找包含"SSID"的行，但不包含"BSSID"的行，获取WiFi名称
+        if "SSID" in line and "BSSID" not in line:
+            return line.split(":")[1].strip()
+    return None
 
 
 def link_wifi():  # 登入校园网
@@ -294,7 +300,9 @@ def islink():
     try:
         requests.get(dr_url, timeout=0.5)  # 尝试连接校园网验证地址
     except requests.exceptions.RequestException:
-        if requests.get(baidu_url).status_code == requests.codes.ok:  # 连接百度成功，但连接校园网验证地址失败
+        if (
+            requests.get(baidu_url).status_code == requests.codes.ok
+        ):  # 连接百度成功，但连接校园网验证地址失败
             return 2  # 已连接其他网络
     else:
         try:

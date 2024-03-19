@@ -46,8 +46,9 @@ class NotificationHelper {
       '通知',
       channelDescription: '通知',
       importance: Importance.max,
-      priority: Priority.high,
+      priority: Priority.max,
       ticker: 'ticker',
+      icon: '@mipmap/ic_launcher', // 指定状态栏图标
       playSound: false, // 不播放声音
       enableVibration: false, // 不震动
       styleInformation: BigTextStyleInformation(''), // 使用大文本样式

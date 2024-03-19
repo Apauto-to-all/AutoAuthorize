@@ -133,7 +133,7 @@ Future<void> saveData(String username, String password, String operator) async {
 Future<void> initializeData() async {
   await storage.write(key: 'username', value: "");
   await storage.write(key: 'password', value: "");
-  await storage.write(key: 'operator', value: "");
+  await storage.write(key: 'operator', value: null);
   await storage.write(key: 'operatorLast', value: "");
 }
 

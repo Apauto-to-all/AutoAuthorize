@@ -52,6 +52,8 @@ class NotificationHelper {
       playSound: false, // 不播放声音
       enableVibration: false, // 不震动
       styleInformation: BigTextStyleInformation(''), // 使用大文本样式
+      channelShowBadge: true, // 在状态栏显示通知徽章
+      fullScreenIntent: true, // 全屏意图
     );
 
     // ios的通知

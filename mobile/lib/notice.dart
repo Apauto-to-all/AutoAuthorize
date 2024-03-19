@@ -45,7 +45,7 @@ class NotificationHelper {
       'your.channel.id',
       '通知',
       channelDescription: '通知',
-      importance: Importance.high,
+      importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
       playSound: false, // 不播放声音

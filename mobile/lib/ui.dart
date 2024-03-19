@@ -25,23 +25,10 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   String? choiceWifi; // 选择的WiFi
   String isLoginButtonText = '保存账户并验证'; // 是否登入
   String? verifyAccount; // 是否通过验证
-  late FocusNode _focusNode; // 输入框焦点
-
-  void _onFocusChange() {
-    if (_focusNode.hasFocus) {
-      // 当前组件获得了焦点
-      // 在这里注册你的后台任务
-    } else {
-      // 当前组件失去了焦点
-      // 在这里取消你的后台任务
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(_onFocusChange);
     showBegin();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -49,8 +36,6 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -63,8 +48,11 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
       Workmanager().registerPeriodicTask(
         "2",
         "监测ECJTU校园网",
-        inputData: {'提示': '15分钟检测一次'},
         frequency: const Duration(minutes: 15), // 这里设置任务的执行频率
+      );
+      notificationHelper.showNotification(
+        title: '后台监测已开启',
+        body: '每隔15分钟检测一次校园网是否断开',
       );
     } else if (state == AppLifecycleState.resumed) {
       // 应用从后台切换到前台，立即连接校园网
@@ -80,17 +68,14 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   }
 
   Future<void> showBegin() async {
-    String? value = await storage.read(key: 'verifyAccount');
-    if (value == null) {
+    await getVerifyAccount();
+    if (verifyAccount == null) {
       notificationHelper.showNotification(
         title: '欢迎使用自动登入校园网',
         body: '首次使用，请先阅读"说明"',
       );
       await storage.write(key: 'verifyAccount', value: '0');
-    }
-
-    await getVerifyAccount();
-    if (verifyAccount == '1') {
+    } else if (verifyAccount == '1') {
       String? usernameText = await storage.read(key: 'username');
       String? passwordText = await storage.read(key: 'password');
       String? operatorText = await storage.read(key: 'operator');
@@ -228,6 +213,7 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
                   } else {
                     await initializeData();
                     showMessage(context, "账户已允许修改，修改完成后，请重新进行验证");
+                    await storage.write(key: 'verifyAccount', value: '0');
                     showBegin();
                   }
                 },

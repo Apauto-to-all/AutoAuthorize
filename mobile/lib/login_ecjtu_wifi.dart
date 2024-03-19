@@ -60,6 +60,7 @@ Future<void> logout(final response) async {
   }
 }
 
+
 Future<void> saveAndVerify(BuildContext context, String username,
     String password, String? operator) async {
   var wifiName = await getWifiName(context);

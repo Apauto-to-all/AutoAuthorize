@@ -58,7 +58,7 @@ Future<void> firstRun() async {
       } catch (e) {
         notificationHelper.showNotification(
           title: '错误',
-          body: '在连接校园网时，请先关闭移动数据后，再运行',
+          body: '在连接校园网时，请先关闭移动数据后，再运行\n也有可能是校园网的问题',
         );
         return;
       }

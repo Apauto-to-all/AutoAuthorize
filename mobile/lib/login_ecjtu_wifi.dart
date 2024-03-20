@@ -60,7 +60,6 @@ Future<void> logout(final response) async {
   }
 }
 
-
 Future<void> saveAndVerify(BuildContext context, String username,
     String password, String? operator) async {
   var wifiName = await getWifiName(context);
@@ -94,7 +93,8 @@ Future<void> saveAndVerify(BuildContext context, String username,
           return;
         }
       } catch (e) {
-        showMessage(context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试');
+        showMessage(
+            context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试\n也有可能是校园网的问题');
         return;
       }
     }
@@ -148,7 +148,8 @@ Future<void> linkWifiNow(BuildContext context) async {
           }
         }
       } catch (e) {
-        showBottomMessage(context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试');
+        showBottomMessage(
+            context, '你连接了校园网WiFi，同时打开了移动数据，程序无法工作，请关闭移动数据后再试\n也有可能是校园网的问题');
       }
     } else {
       showBottomMessage(context, '请连接校园网');

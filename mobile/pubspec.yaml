@@ -26,7 +26,7 @@ dependencies:
 
   url_launcher: ^6.2.5 # 打开浏览器
   
-  workmanager: ^0.5.2 # 后台任务
+  # workmanager: ^0.5.2 # 后台任务，不适用
   
 
 dev_dependencies:

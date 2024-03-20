@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:workmanager/workmanager.dart';
 import 'login_ecjtu_wifi.dart';
 import 'notice.dart';
 import 'save_and_get.dart';
@@ -43,20 +42,8 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    if (state == AppLifecycleState.paused && verifyAccount == '1') {
-      // 应用进入后台
-      Workmanager().registerPeriodicTask(
-        "2",
-        "监测ECJTU校园网",
-        frequency: const Duration(minutes: 15), // 这里设置任务的执行频率
-      );
-      notificationHelper.showNotification(
-        title: '后台监测已开启',
-        body: '每隔15分钟检测一次校园网是否断开',
-      );
-    } else if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed) {
       // 应用从后台切换到前台，立即连接校园网
-      Workmanager().cancelAll();
       if (verifyAccount == '1') {
         linkWifiNow(context);
       }
@@ -75,6 +62,9 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
         body: '首次使用，请先阅读"说明"',
       );
       await storage.write(key: 'verifyAccount', value: '0');
+      showMessage(context, "首次使用，请先阅读“说明”\n如果你的通知不是横幅显示，请将手动修改为横幅通知，以免错过一些信息");
+      showBottomMessage(
+          context, "首次使用，请先阅读“说明”\n如果你的通知不是横幅显示，请将手动修改为横幅通知，以免错过一些信息");
     } else if (verifyAccount == '1') {
       String? usernameText = await storage.read(key: 'username');
       String? passwordText = await storage.read(key: 'password');

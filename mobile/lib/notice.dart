@@ -54,6 +54,7 @@ class NotificationHelper {
       styleInformation: BigTextStyleInformation(''), // 使用大文本样式
       channelShowBadge: true, // 在状态栏显示通知徽章
       fullScreenIntent: true, // 全屏意图
+      timeoutAfter: 8000, // 通知超时时间
     );
 
     // ios的通知

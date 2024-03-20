@@ -39,7 +39,7 @@
 
 - 在“说明”中看
 
-<img width="70%" src="images_show/flutter_img1.png">
+<img width="50%" src="images_show/flutter_img1.png">
 
 
 ## 使用方法-Win
@@ -65,7 +65,7 @@
 
 - 解锁自动连接校园网功能后，每次运行程序，尝试自动连接校园网，并运行一个对话窗口进行提示，无操作几秒后自动退出。
 
-<img width="70%" src="images_show/python_img1.png">
+<img width="50%" src="images_show/python_img1.png">
 
 
 - 在2.2版本中添加后台监测功能，需要打开主界面，然后点击页面右上角的“托盘运行”按钮，程序会自动最小化到系统托盘，然后在后台监测网络连接，如果检测到网络连接断开，会自动尝试重新连接校园网。

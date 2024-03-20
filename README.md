@@ -47,7 +47,7 @@
 
 ### 添加校园网账户
 
-- 下载压缩文件或exe单文件后，压缩文件解压到任意目录，exe文件直接使用，双击`AuinEcjtuWifi.exe`或`AuinEcjtuWifi-upx`即可运行程序。
+- 下载压缩文件或exe单文件后，`AuinEcjtuWifi.zip`压缩文件解压到任意目录，使用文件夹中的`AuinEcjtuWifi.exe`；单exe文件双击`AuinEcjtuWifi.exe`或`AuinEcjtuWifi-upx.exe`直接使用。
 
 
 - 如果是第一次运行，会在C：\Auto_Login_ECJTU_Wifi_Data文件夹下自动创建相关的配置文件。

@@ -30,8 +30,8 @@ Future<void> firstRun() async {
               .get(Uri.parse(baiduUrl))
               .timeout(const Duration(milliseconds: 1000));
           notificationHelper.showNotification(
-            title: '？？？',
-            body: '你已登入ECJTU WiFi，是来看通知的吗？',
+            title: '欢迎回来！',
+            body: '你已连接ECJTU WiFi，有什么可以帮助你的？',
           );
           return;
         } catch (e) {
@@ -43,13 +43,10 @@ Future<void> firstRun() async {
             // 显示已经登入校园网的消息
             notificationHelper.showNotification(
               title: '自动登入',
-              body: '已帮你自动登入校园网，请手动退出程序',
+              body: '已帮你自动登入校园网，自动退出程序中……',
             );
-            SystemNavigator.pop();
-            // 延迟后退出应用
-            // Future.delayed(const Duration(milliseconds: 100), () {
-            //   SystemNavigator.pop();
-            // });
+            SystemNavigator.pop(); // 自动退出程序
+            return;
           } catch (e) {
             notificationHelper.showNotification(
               title: '失败',

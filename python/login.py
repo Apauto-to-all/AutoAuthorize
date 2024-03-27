@@ -137,14 +137,14 @@ def save_post_data_header():
         "Safari/537.36"
     }
     with open(path_header, "w") as f_h:
-        json.dump(post_header, f_h)
+        json.dump(post_header, f_h, indent=4)
 
 
 def save_account(nc, username, password, operator):  # 保存账号密码
     if nc == "":
         nc = username
     with open(path_account, "w") as f_account:
-        json.dump({nc: [username, password, operator]}, f_account)
+        json.dump({nc: [username, password, operator]}, f_account, indent=4)
     save_post_data_header()
 
 
@@ -193,7 +193,7 @@ def link_wifi():  # 登入校园网
         stats_f = json.load(f)
     stats_f["stats_times"] += 1
     with open(path_stats, "w") as f:
-        json.dump(stats_f, f)
+        json.dump(stats_f, f, indent=4)
 
 
 def logout():  # 注销校园网账户
@@ -247,7 +247,7 @@ def create_files():  # 第一次运行，创建文件
             "stats_times": 0,  # 统计使用次数
         }
         with open(path_stats, "w") as f:
-            json.dump(dat, f)
+            json.dump(dat, f, indent=4)
 
 
 def change_settings(section, option, value):  # 快速修改设置的值

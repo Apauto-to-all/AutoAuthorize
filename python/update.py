@@ -28,7 +28,7 @@ def update_announcement():
             stats_f = json.load(f)
         stats_f["announcement_day"] = get_today()
         with open(path_stats, "w") as f:
-            json.dump(stats_f, f)
+            json.dump(stats_f, f, indent=4)
     except Exception:
         update_announcement_fail()
 
@@ -64,7 +64,7 @@ def update_now_stats_days():
     stats_f["now_day"] = get_today()
     stats_f["stats_days"] = days
     with open(path_stats, "w") as f:
-        json.dump(stats_f, f)
+        json.dump(stats_f, f, indent=4)
 
 
 # 检查版本

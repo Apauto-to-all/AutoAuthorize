@@ -202,8 +202,8 @@ class _UiBody extends State<UiDesign> with WidgetsBindingObserver {
                     showBegin();
                   } else {
                     await initializeData();
-                    showMessage(context, "账户已允许修改，修改完成后，请重新进行验证");
                     await storage.write(key: 'verifyAccount', value: '0');
+                    showMessage(context, "账户已允许修改，修改完成后，请重新进行验证");
                     showBegin();
                   }
                 },

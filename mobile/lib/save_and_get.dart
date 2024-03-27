@@ -84,7 +84,7 @@ Future<void> initializeData() async {
   await storage.write(key: 'username', value: "");
   await storage.write(key: 'password', value: "");
   await storage.write(key: 'operator', value: null);
-  await storage.write(key: 'operatorLast', value: "");
+  await storage.write(key: 'operatorLast', value: "-1");
 }
 
 String changeOperatorLast(String operator) {
